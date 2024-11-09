@@ -4,7 +4,7 @@ FlightTicket is a serverless application benchmark running on top of [OpenWhisk]
 The application is architectured based on the [TrainTicket](https://github.com/FudanSELab/train-ticket) benchmark. 
 Different from TrainTicket, FlightTicket is implemented in Python and runs as a serverless application on [OpenWhisk](https://openwhisk.apache.org/).
 
-One key feature of FlightTicket is that, instead of using a synthetic input generator, FlightTicket uses the US-airlines dataset from the US Department of transport.
+One key feature of FlightTicket is that, instead of using a synthetic input generator, FlightTicket uses the [US-airlines dataset](https://osf.io/6398x/) from the US Department of transport.
 
 FlightTicket is created by [Jovan Stojkovic](https://jovans2.github.io) and is maintained by [Alan Andrade](https://github.com/Alan-S-Andrade). 
 
