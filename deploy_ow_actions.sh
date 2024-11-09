@@ -1,0 +1,23 @@
+#!/bin/bash
+for dir in */; do
+    ( 
+        cd "$dir" || continue
+        docker run --rm -v "$PWD:/tmp" openwhisk/python3action bash -c \
+        "cd /tmp && virtualenv virtualenv && source virtualenv/bin/activate && pip install -r requirements.txt"
+    )
+done
+
+wsk -i action create query-for-travel QueryForTravel/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create seat-service SeatService/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create save-order-info SaveOrderInfo/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create query-for-station-id-by-station-name QueryForStationIdByStationName/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create query-config-entity-by-config-name QueryConfigEntityByConfigName/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create get-train-type-by-trip-id GetTrainTypeByTripId/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create get-train-type-by-train-type-id GetTrainTypeByTrainTypeId/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create get-sold-tickets GetSoldTickets/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create get-route-by-route-id GetRouteByRouteId/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create get-route-by-trip-id GetRouteByTripId/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create get-price-by-route-id-and-train-type GetPriceByRouteIdAndTrainType/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create get-order-by-id GetOrderById/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create drawback Drawback/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create cancel-service CancelService/function.zip --docker openwhisk/python3action --timeout 120000

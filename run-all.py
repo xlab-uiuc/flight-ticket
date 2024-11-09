@@ -1,0 +1,178 @@
+import numpy as np
+import subprocess
+import redis
+import argparse
+import random
+import ast
+import time
+from datetime import datetime, timedelta
+
+def log_performance():
+    global request_count
+    global start_time_logging
+
+    with open("record.log", "a") as log_file:
+        while True:
+           
+            current_time = time.time()
+            elapsed_time = current_time - start_time_logging
+
+            
+            if elapsed_time >= 1:
+             
+                rps = request_count / elapsed_time if elapsed_time > 0 else 0
+                
+              
+                avg_latency = np.mean(latency_records) if latency_records else 0
+                
+               
+                log_file.write(f"{avg_latency:.2f};{rps:.2f}\n")
+                log_file.flush()  # Ensure that it writes to the file immediately
+                
+        
+                request_count = 0
+                start_time_logging = current_time
+            
+            time.sleep(0.1)
+
+def EnforceActivityWindow(start_time, end_time, instance_events):
+    events_iit = []
+    events_abs = [0] + instance_events
+    event_times = [sum(events_abs[:i]) for i in range(1, len(events_abs) + 1)]
+    event_times = [e for e in event_times if (e > start_time) and (e < end_time)]
+    try:
+        events_iit = [event_times[0]] + [event_times[i] - event_times[i - 1] for i in range(1, len(event_times))]
+    except:
+        pass
+    return events_iit
+
+def calculate_p99(latencies):
+    return np.percentile(latencies, 99)
+
+def write_p99_to_file(latencies, file_name="p99.txt"):
+    p99_latency = calculate_p99(latencies)
+    with open(file_name, "w") as f:
+        f.write(f'P99 latency: {p99_latency} ms\n')
+
+def time_invocation(command):
+    start = time.time()
+    try:
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        if e.returncode == 202:
+            print(f"Ignoring exit code 202 meaning the request is taking longer than expected; no problem: {e}")
+    end = time.time()
+    return (end - start) * 1000
+
+# running query-for-travel
+# wsk -i action invoke query-for-travel --param start "Springfield" --param end "Cicero" --param "trainTypeId" t1 --param "rId" r51 --param seatClass "economyClass" --blocking --result
+def invoke_query(client):
+    stations = client.hgetall("stations")
+    stations = {key.decode('utf-8'): ast.literal_eval(value.decode('utf-8')) for key, value in stations.items()}
+
+    num_routes = len(stations)
+    random_route = f"r{random.randint(1, num_routes)}"
+    route = stations.get(random_route)
+    start_index = random.randint(0, len(route) - 2)
+    end_index = random.randint(start_index + 1, len(route) - 1)
+
+    # grab station names
+    startSt = client.hget("sId", route[start_index]).decode('utf-8')
+    endSt = client.hget("sId", route[end_index]).decode('utf-8')
+
+    # grab train
+    random_train = f"t{random.randint(1, 100)}"
+
+    # select random seat class
+    seat_class = random.choice(["economyClass", "confortClass"])
+
+    # invoke query-for-travel
+    invoke_query_cmd = f"wsk -i action invoke query-for-travel --param start \"{startSt}\" --param end \"{endSt}\" --param trainTypeId \"{random_train}\" --param rId \"{random_route}\" --param seatClass \"{seat_class}\" --result --blocking"
+    return time_invocation(invoke_query_cmd)
+
+# running seat-service
+# wsk -i action invoke seat-service --param tripId "t300" --param "date" "10-23-2024" --param startStation "Mount Prospect" --param destStation "Decatur" --param seatClass "economyClass" --blocking --result
+def invoke_seat_service(client):
+    stations = client.hgetall("stations")
+    stations = {key.decode('utf-8'): ast.literal_eval(value.decode('utf-8')) for key, value in stations.items()}
+
+    num_routes = len(stations)
+    random_route = f"r{random.randint(1, num_routes)}"
+    route = stations.get(random_route)
+    start_index = random.randint(0, len(route) - 2)
+    end_index = random.randint(start_index + 1, len(route) - 1)
+
+    # grab station names
+    startSt = client.hget("sId", route[start_index]).decode('utf-8')
+    endSt = client.hget("sId", route[end_index]).decode('utf-8')
+
+    trip_id = f"t{random.randint(1, 400)}"
+    travel_date = (datetime.now() + timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
+    seat_class = random.choice(["economyClass", "confortClass"])
+
+    invoke_seat_service_cmd = f"wsk -i action invoke seat-service --param tripId \"{trip_id}\" --param date \"{travel_date}\" --param startStation \"{startSt}\" --param destStation \"{endSt}\" --param seatClass \"{seat_class}\" --result --blocking"
+    return time_invocation(invoke_seat_service_cmd)
+
+# running cancel-service
+# after running this we must change back the 'stat' of the orders
+# wsk -i action invoke cancel-service --param orderId "ord-200" --param loginId "id_444" --blocking --result
+def invoke_cancel_service(calls_count):
+    order = f"ord-{random.randint(1,200)}"
+    loginId = f"id_{random.randint(1,600)}"
+
+    if calls_count % 50 == 0:
+        reset_orders_to_active_status_cmd = "python3 reset_order_status.py"
+        subprocess.run(reset_orders_to_active_status_cmd, shell=True, check=True)
+
+    invoke_cancel_service_cmd = f"wsk -i action invoke cancel-service --param orderId \"{order}\" --param loginId \"{loginId}\" --result --blocking"
+    return time_invocation(invoke_cancel_service_cmd)
+
+
+def main():
+    seed = 100
+    loads = [1]
+    load_desc = ["LOW_LOAD", "MED_LOAD", "HIGH_LOAD"]
+    np.random.seed(100)
+
+    parser = argparse.ArgumentParser(description='Process args')
+    parser.add_argument('--minutes', type=str, help='Duration in minutes to run the workflow')
+    args = parser.parse_args()
+    minutes = 60 * int(args.minutes)
+    calls_count = 0
+    latencies = []
+
+    client = redis.Redis(host="localhost", port=6379, db=1)
+
+    logging_thread = threading.Thread(target=log_performance, daemon=True)
+    logging_thread.start()
+
+    start_time = time.time()
+    while time.time() - start_time < minutes:
+        for load in loads:
+            # generate Poisson's distribution of events 
+            seed = 101
+            np.random.seed(seed)
+            rate = load / 60
+            inter_arrivals = list(np.random.exponential(scale=1.0 / rate, size=int(2 * minutes * rate)))
+            instance_events = EnforceActivityWindow(0, minutes, inter_arrivals)
+
+            start_time = time.time()
+            for inter_arrival in instance_events:
+                if time.time() - start_time > minutes:
+                    break
+
+                print(inter_arrival)
+                
+                #latencies.append(invoke_cancel_service(calls_count))
+                #latencies.append(invoke_query(client))
+                latencies.append(invoke_seat_service(client))
+                
+                calls_count += 1
+
+                # wait for the next event (inter-arrival time)
+                time.sleep(inter_arrival)
+                
+    write_p99_to_file(latencies)
+
+if __name__ == "__main__":
+    main()
