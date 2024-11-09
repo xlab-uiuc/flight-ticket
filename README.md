@@ -1,6 +1,14 @@
-## Running Serverless TrainTicket on Apache OpenWhisk
+# The FlightTicket Serverless Application Benchmark
 
-This is Jovan's reimplementation of [TrainTicket](https://github.com/FudanSELab/train-ticket) with [OpenWhisk](https://openwhisk.apache.org/).
+FlightTicket is a serverless application benchmark running on top of [OpenWhisk](https://openwhisk.apache.org/) on [Kubernetes](https://kubernetes.io/). 
+The application is architectured based on the [TrainTicket](https://github.com/FudanSELab/train-ticket) benchmark. 
+Different from TrainTicket, FlightTicket is implemented in Python and runs as a serverless application on [OpenWhisk](https://openwhisk.apache.org/).
+
+One key feature of FlightTicket is that, instead of using a synthetic input generator, FlightTicket uses the US-airlines dataset from the US Department of transport.
+
+FlightTicket is created by [Jovan Stojkovic](https://jovans2.github.io) and is maintained by [Alan Andrade](https://github.com/Alan-S-Andrade). 
+
+## Use the FlightTicket benchmark
 
 Deploy a minikube cluster
 ```
