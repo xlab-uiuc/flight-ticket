@@ -21,3 +21,16 @@ wsk -i action create get-price-by-route-id-and-train-type GetPriceByRouteIdAndTr
 wsk -i action create get-order-by-id GetOrderById/function.zip --docker openwhisk/python3action --timeout 120000
 wsk -i action create drawback Drawback/function.zip --docker openwhisk/python3action --timeout 120000
 wsk -i action create cancel-service CancelService/function.zip --docker openwhisk/python3action --timeout 120000
+
+python3 populate_redis/add_distances.py
+python3 populate_redis/add_entities.py
+python3 populate_redis/add_money.py
+python3 populate_redis/add_orders.py
+python3 populate_redis/add_planes.py
+python3 populate_redis/add_priceroute.py
+python3 populate_redis/add_routes.py
+python3 populate_redis/add_sId.py
+python3 populate_redis/add_sold_tickets.py
+python3 populate_redis/add_station.py
+python3 populate_redis/add_trips.py
+python3 populate_redis/reset_order_status.py
