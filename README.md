@@ -1,6 +1,6 @@
 ## Running Serverless TrainTicket on Apache OpenWhisk
 
-Implementing Jovan's reimplementation of [TrainTicket](https://github.com/FudanSELab/train-ticket) with [OpenWhisk](https://openwhisk.apache.org/).
+This is Jovan's reimplementation of [TrainTicket](https://github.com/FudanSELab/train-ticket) with [OpenWhisk](https://openwhisk.apache.org/).
 
 Deploy a minikube cluster
 ```
