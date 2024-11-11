@@ -50,7 +50,7 @@ Now we are ready to deploy OpenWhisk
 helm install owdev ./helm/openwhisk -n openwhisk --create-namespace -f ./deploy/kind/mycluster.yaml # we use this mycluster.yaml as it has single-node config
 ```
 
-Watch OpenWhisk deployment, wait for **owdev-install-packages** to be **Completed **meaning OW was deployed successfully. Should take around 10 min.
+Watch OpenWhisk deployment, wait for **owdev-install-packages** to be **Completed** meaning OW was deployed successfully. Should take around 10 min.
 ```
 kubectl get pods -n openwhisk --watch
 ```
