@@ -1,8 +1,8 @@
 # The FlightTicket Serverless Application Benchmark
 
 FlightTicket is a serverless application benchmark running on top of [OpenWhisk](https://openwhisk.apache.org/) on [Kubernetes](https://kubernetes.io/). 
-The application is architectured based on the [AirairplaneTicket](https://github.com/FudanSELab/airplane-ticket) benchmark. 
-Different from AirairplaneTicket, FlightTicket is implemented in Python and runs as a serverless application on [OpenWhisk](https://openwhisk.apache.org/).
+The application is architectured based on the [AirplaneTicket](https://github.com/FudanSELab/airplane-ticket) benchmark. 
+Different from AirplaneTicket, FlightTicket is implemented in Python and runs as a serverless application on [OpenWhisk](https://openwhisk.apache.org/).
 
 One key feature of FlightTicket is that, instead of using a synthetic input generator, FlightTicket uses the [US-airlines dataset](https://osf.io/6398x/) from the US Department of transport.
 
@@ -79,7 +79,7 @@ Build and push docker images, deploy functions as OpenWhisk actions then create 
 Download airline-tickets-usa data from OSF:
 https://files.osf.io/v1/resources/6398x/providers/osfstorage/5ff8362686541a012814b8a4/?zip=
 
-Now we need to deploy Redis and populate it with AirairplaneTicket data (only to be done once):
+Now we need to deploy Redis and populate it with AirplaneTicket data (only to be done once):
 ```
 sudo apt update
 sudo apt install redis-server

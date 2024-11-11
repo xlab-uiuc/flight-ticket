@@ -10,7 +10,7 @@ class Seat:
         self.destStation = _destStation
         self.seatType = _seatType
 
-class AirairplaneType:
+class AirplaneType:
     def __init__(self, _id, _economyClass, _confortClass, _avgSpeed):
         self.id = _id
         self.economyClass = _economyClass

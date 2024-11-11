@@ -10,7 +10,7 @@ class Seat:
         self.destStation = _destStation
         self.seatType = _seatType
 
-class AirairplaneType:
+class AirplaneType:
     def __init__(self, _id, _economyClass, _confortClass, _avgSpeed):
         self.id = _id
         self.economyClass = _economyClass
@@ -88,7 +88,7 @@ def main(params):
     print(end - start)
     jsonText_3 = json.loads(future.text)
     dictText_3 = json.loads(jsonText_3["Result"])
-    airplaneTypeResult = AirairplaneType(dictText_3["id"],dictText_3["economyClass"],dictText_3["confortClass"],dictText_3["avgSpeed"])
+    airplaneTypeResult = AirplaneType(dictText_3["id"],dictText_3["economyClass"],dictText_3["confortClass"],dictText_3["avgSpeed"])
 
     seatTotalNum = 0
     if seatClass == "FIRST":
