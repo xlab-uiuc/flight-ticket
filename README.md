@@ -26,7 +26,7 @@ sudo apt-get install helm
 
 Init helm and install Tiller to the K8 cluster
 ```
-helm inint
+helm init
 kubectl create clusterrolebinding tiller-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
 ```
 
@@ -38,7 +38,7 @@ minikube ip # add use this to edit mycluster.yaml
 vim deploy/kind/mycluster.yaml # edit apiHostName to be the x.x.x.x IP from last cmd e.g. apiHostName = 192.168.49.2
 ```
 
-Edit the vaues.yaml config file to allow more than 60 function invocations per minute:
+Edit the values.yaml config file to allow more than 60 function invocations per minute:
 ```
 vim helm/openwhisk/values.yaml
 set both of these to 1000:
@@ -50,7 +50,7 @@ Now we are ready to deploy OpenWhisk
 helm install owdev ./helm/openwhisk -n openwhisk --create-namespace -f ./deploy/kind/mycluster.yaml # we use this mycluster.yaml as it has single-node config
 ```
 
-Watch OpenWhisk deployment, wait for **owdev-install-packages** to be **Completed **meaning OW was deployed succesfuly. Should take around 10 min.
+Watch OpenWhisk deployment, wait for **owdev-install-packages** to be **Completed **meaning OW was deployed successfully. Should take around 10 min.
 ```
 kubectl get pods -n openwhisk --watch
 ```
