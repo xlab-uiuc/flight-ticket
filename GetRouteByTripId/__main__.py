@@ -5,14 +5,14 @@ import ast
 import requests
 
 class Seat:
-    def __init__(self, _travelDate, _trainNumber, _startStation, _destStation, _seatType):
+    def __init__(self, _travelDate, _airplaneNumber, _startStation, _destStation, _seatType):
         self.travelDate = _travelDate
-        self.trainNumber = _trainNumber
+        self.airplaneNumber = _airplaneNumber
         self.startStation = _startStation
         self.destStation = _destStation
         self.seatType = _seatType
 
-class TrainType:
+class AircraftType:
     def __init__(self, _id, _economyClass, _confortClass, _avgSpeed):
         self.id = _id
         self.economyClass = _economyClass

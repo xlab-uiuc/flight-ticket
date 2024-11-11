@@ -3,12 +3,12 @@ wsk -i action update seat-service --docker alansandrade/seatservice:latest
 wsk -i action update save-order-info --docker alansandrade/saveorderinfo:latest
 wsk -i action update query-for-station-id-by-station-name --docker alansandrade/queryforstationidbystationname:latest
 wsk -i action update query-config-entity-by-config-name --docker alansandrade/queryconfigentitybyconfigname:latest
-wsk -i action update get-train-type-by-trip-id --docker alansandrade/gettraintypebytripid:latest
-wsk -i action update get-train-type-by-train-type-id --docker alansandrade/gettraintypebytraintypeid:latest
+wsk -i action update get-airplane-type-by-trip-id --docker alansandrade/getairplanetypebytripid:latest
+wsk -i action update get-airplane-type-by-airplane-type-id --docker alansandrade/getairplanetypebyairplanetypeid:latest
 wsk -i action update get-sold-tickets --docker alansandrade/getsoldtickets:latest
 wsk -i action update get-route-by-route-id --docker alansandrade/getroutebyrouteid:latest
 wsk -i action update get-route-by-trip-id --docker alansandrade/getroutebytripid:latest
-wsk -i action update get-price-by-route-id-and-train-type --docker alansandrade/getpricebyrouteidandtraintype:latest
+wsk -i action update get-price-by-route-id-and-airplane-type --docker alansandrade/getpricebyrouteidandairplanetype:latest
 wsk -i action update get-order-by-id --docker alansandrade/getorderbyid:latest
 wsk -i action update drawback --docker alansandrade/drawback:latest
 wsk -i action update cancel-service --docker alansandrade/cancelservice:latest

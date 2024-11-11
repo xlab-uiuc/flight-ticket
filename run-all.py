@@ -65,7 +65,7 @@ def time_invocation(command):
     return (end - start) * 1000
 
 # running query-for-travel
-# wsk -i action invoke query-for-travel --param start "Springfield" --param end "Cicero" --param "trainTypeId" t1 --param "rId" r51 --param seatClass "economyClass" --blocking --result
+# wsk -i action invoke query-for-travel --param start "Springfield" --param end "Cicero" --param "airplaneTypeId" t1 --param "rId" r51 --param seatClass "economyClass" --blocking --result
 def invoke_query(client):
     stations = client.hgetall("stations")
     stations = {key.decode('utf-8'): ast.literal_eval(value.decode('utf-8')) for key, value in stations.items()}
@@ -80,14 +80,14 @@ def invoke_query(client):
     startSt = client.hget("sId", route[start_index]).decode('utf-8')
     endSt = client.hget("sId", route[end_index]).decode('utf-8')
 
-    # grab train
-    random_train = f"t{random.randint(1, 100)}"
+    # grab airplane
+    random_airplane = f"t{random.randint(1, 100)}"
 
     # select random seat class
     seat_class = random.choice(["economyClass", "confortClass"])
 
     # invoke query-for-travel
-    invoke_query_cmd = f"wsk -i action invoke query-for-travel --param start \"{startSt}\" --param end \"{endSt}\" --param trainTypeId \"{random_train}\" --param rId \"{random_route}\" --param seatClass \"{seat_class}\" --result --blocking"
+    invoke_query_cmd = f"wsk -i action invoke query-for-travel --param start \"{startSt}\" --param end \"{endSt}\" --param airplaneTypeId \"{random_airplane}\" --param rId \"{random_route}\" --param seatClass \"{seat_class}\" --result --blocking"
     return time_invocation(invoke_query_cmd)
 
 # running seat-service

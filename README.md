@@ -1,8 +1,8 @@
 # The FlightTicket Serverless Application Benchmark
 
 FlightTicket is a serverless application benchmark running on top of [OpenWhisk](https://openwhisk.apache.org/) on [Kubernetes](https://kubernetes.io/). 
-The application is architectured based on the [TrainTicket](https://github.com/FudanSELab/train-ticket) benchmark. 
-Different from TrainTicket, FlightTicket is implemented in Python and runs as a serverless application on [OpenWhisk](https://openwhisk.apache.org/).
+The application is architectured based on the [AirairplaneTicket](https://github.com/FudanSELab/airplane-ticket) benchmark. 
+Different from AirairplaneTicket, FlightTicket is implemented in Python and runs as a serverless application on [OpenWhisk](https://openwhisk.apache.org/).
 
 One key feature of FlightTicket is that, instead of using a synthetic input generator, FlightTicket uses the [US-airlines dataset](https://osf.io/6398x/) from the US Department of transport.
 
@@ -65,9 +65,9 @@ wsk property set --apihost <whisk.ingress.apiHostName>:<whisk.ingress.apiHostPor
 wsk property set --auth 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
 ```
 
-Edit the trainTicket functions to reflect your minikube cluster running openwhisk, there are only four functions which use the APIHOST variable (SeatService, QueryForTravel, GetRouteByTripId, CancelService). Add your `minikube_IP:OW_PORT` to the `APIHOST` variable of those four functions e.g.  APIHOST = "http://192.168.49.2:31001"
+Edit the airplaneTicket functions to reflect your minikube cluster running openwhisk, there are only four functions which use the APIHOST variable (SeatService, QueryForTravel, GetRouteByTripId, CancelService). Add your `minikube_IP:OW_PORT` to the `APIHOST` variable of those four functions e.g.  APIHOST = "http://192.168.49.2:31001"
 ```
-cd /home/alan/work/multi_stage_apps/trainTicket/src
+cd /home/alan/work/multi_stage_apps/airplaneTicket/src
 vim QueryForTravel/__main__.py # edit APIHOST as described above
 (do this for the rest of the functions)
 ```
@@ -79,13 +79,13 @@ Build and push docker images, deploy functions as OpenWhisk actions then create 
 Download airline-tickets-usa data from OSF:
 https://files.osf.io/v1/resources/6398x/providers/osfstorage/5ff8362686541a012814b8a4/?zip=
 
-Now we need to deploy Redis and populate it with TrainTicket data (only to be done once):
+Now we need to deploy Redis and populate it with AirairplaneTicket data (only to be done once):
 ```
 sudo apt update
 sudo apt install redis-server
 sudo service redis-server start
 pip install redis
-cd /work/multi_stage_apps/trainTicket/src
+cd /work/multi_stage_apps/airplaneTicket/src
 ./deploy_ow_actions.sh
 ```
 

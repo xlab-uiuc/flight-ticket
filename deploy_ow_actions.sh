@@ -12,12 +12,12 @@ wsk -i action create seat-service SeatService/function.zip --docker openwhisk/py
 wsk -i action create save-order-info SaveOrderInfo/function.zip --docker openwhisk/python3action --timeout 120000
 wsk -i action create query-for-station-id-by-station-name QueryForStationIdByStationName/function.zip --docker openwhisk/python3action --timeout 120000
 wsk -i action create query-config-entity-by-config-name QueryConfigEntityByConfigName/function.zip --docker openwhisk/python3action --timeout 120000
-wsk -i action create get-train-type-by-trip-id GetTrainTypeByTripId/function.zip --docker openwhisk/python3action --timeout 120000
-wsk -i action create get-train-type-by-train-type-id GetTrainTypeByTrainTypeId/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create get-airplane-type-by-trip-id GetAirairplaneTypeByTripId/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create get-airplane-type-by-airplane-type-id GetAirairplaneTypeByAirairplaneTypeId/function.zip --docker openwhisk/python3action --timeout 120000
 wsk -i action create get-sold-tickets GetSoldTickets/function.zip --docker openwhisk/python3action --timeout 120000
 wsk -i action create get-route-by-route-id GetRouteByRouteId/function.zip --docker openwhisk/python3action --timeout 120000
 wsk -i action create get-route-by-trip-id GetRouteByTripId/function.zip --docker openwhisk/python3action --timeout 120000
-wsk -i action create get-price-by-route-id-and-train-type GetPriceByRouteIdAndTrainType/function.zip --docker openwhisk/python3action --timeout 120000
+wsk -i action create get-price-by-route-id-and-airplane-type GetPriceByRouteIdAndAirairplaneType/function.zip --docker openwhisk/python3action --timeout 120000
 wsk -i action create get-order-by-id GetOrderById/function.zip --docker openwhisk/python3action --timeout 120000
 wsk -i action create drawback Drawback/function.zip --docker openwhisk/python3action --timeout 120000
 wsk -i action create cancel-service CancelService/function.zip --docker openwhisk/python3action --timeout 120000
@@ -26,7 +26,7 @@ python3 populate_redis/add_distances.py
 python3 populate_redis/add_entities.py
 python3 populate_redis/add_money.py
 python3 populate_redis/add_orders.py
-python3 populate_redis/add_planes.py
+python3 populate_redis/add_airplanes.py
 python3 populate_redis/add_priceroute.py
 python3 populate_redis/add_routes.py
 python3 populate_redis/add_sId.py

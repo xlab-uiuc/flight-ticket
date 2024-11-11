@@ -3,14 +3,14 @@ import json
 import time
 
 class Seat:
-    def __init__(self, _travelDate, _trainNumber, _startStation, _destStation, _seatType):
+    def __init__(self, _travelDate, _airplaneNumber, _startStation, _destStation, _seatType):
         self.travelDate = _travelDate
-        self.trainNumber = _trainNumber
+        self.airplaneNumber = _airplaneNumber
         self.startStation = _startStation
         self.destStation = _destStation
         self.seatType = _seatType
 
-class TrainType:
+class AirairplaneType:
     def __init__(self, _id, _economyClass, _confortClass, _avgSpeed):
         self.id = _id
         self.economyClass = _economyClass
@@ -49,7 +49,7 @@ def main(params):
     base_url = APIHOST + '/api/v1/namespaces/guest/actions/'
     url_func_9 = base_url + "get-route-by-trip-id"
     url_func_10 = base_url + "get-sold-tickets"
-    url_func_11 = base_url + "get-train-type-by-trip-id"
+    url_func_11 = base_url + "get-airplane-type-by-trip-id"
     url_func_12 = base_url + "query-config-entity-by-config-name"
     authentication = (user_pass[0], user_pass[1])
     parameters = {'blocking': 'true', 'result': 'true'}
@@ -88,13 +88,13 @@ def main(params):
     print(end - start)
     jsonText_3 = json.loads(future.text)
     dictText_3 = json.loads(jsonText_3["Result"])
-    trainTypeResult = TrainType(dictText_3["id"],dictText_3["economyClass"],dictText_3["confortClass"],dictText_3["avgSpeed"])
+    airplaneTypeResult = AirairplaneType(dictText_3["id"],dictText_3["economyClass"],dictText_3["confortClass"],dictText_3["avgSpeed"])
 
     seatTotalNum = 0
     if seatClass == "FIRST":
-        seatTotalNum = trainTypeResult.confortClass
+        seatTotalNum = airplaneTypeResult.confortClass
     else:
-        seatTotalNum = trainTypeResult.economyClass
+        seatTotalNum = airplaneTypeResult.economyClass
     
     stationList = []
     stationList = routeResult.stations

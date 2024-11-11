@@ -3,14 +3,14 @@ import json
 import time
 
 class Seat:
-    def __init__(self, _travelDate, _trainNumber, _startStation, _destStation, _seatType):
+    def __init__(self, _travelDate, _airplaneNumber, _startStation, _destStation, _seatType):
         self.travelDate = _travelDate
-        self.trainNumber = _trainNumber
+        self.airplaneNumber = _airplaneNumber
         self.startStation = _startStation
         self.destStation = _destStation
         self.seatType = _seatType
 
-class TrainType:
+class AirairplaneType:
     def __init__(self, _id, _economyClass, _confortClass, _avgSpeed):
         self.id = _id
         self.economyClass = _economyClass
@@ -42,17 +42,17 @@ class Config:
         self.descr = _descr
 
 class TravelResult:
-    def __init__(self, _status, _percent, _trainType, _prices):
+    def __init__(self, _status, _percent, _airplaneType, _prices):
         self.status = _status
         self.percent = _percent
-        self.trainType = _trainType
+        self.airplaneType = _airplaneType
         self.prices = _prices
 
     def to_dict(self):
         return {
             "status": self.status,
             "percent": self.percent,
-            "trainType": self.trainType,
+            "airplaneType": self.airplaneType,
             "prices": self.prices
         }
 
@@ -64,8 +64,8 @@ def main(params):
     user_pass = AUTH_KEY.split(':')
     base_url = APIHOST + '/api/v1/namespaces/guest/actions/'
     url_func_3 = base_url + "get-route-by-route-id"
-    url_func_4 = base_url + "get-train-type-by-train-type-id"
-    url_func_5 = base_url + "get-price-by-route-id-and-train-type"
+    url_func_4 = base_url + "get-airplane-type-by-airplane-type-id"
+    url_func_5 = base_url + "get-price-by-route-id-and-airplane-type"
     url_func_7 = base_url + "query-for-station-id-by-station-name"
     authentication = (user_pass[0], user_pass[1])
     parameters = {'blocking': 'true', 'result': 'true'}
@@ -97,17 +97,17 @@ def main(params):
         returnResult.status = False
         return {"Result": returnResult}
     
-    trainTypeId = params["trainTypeId"]
-    arguments = {"trainTypeId":trainTypeId}
+    airplaneTypeId = params["airplaneTypeId"]
+    arguments = {"airplaneTypeId":airplaneTypeId}
     start = time.time()
     future = requests.post(url_func_4, params=parameters, auth=authentication, json=arguments, verify=False)
     end = time.time()
     print(end - start)
     print(future.text)
     jsonText_1 = json.loads(future.text)
-    trainType = jsonText_1["Result"]
+    airplaneType = jsonText_1["Result"]
 
-    if (trainType == "None"):
+    if (airplaneType == "None"):
         returnResult.status = False
         return {"Result": returnResult}
     
@@ -140,8 +140,8 @@ def main(params):
     jsonText_1 = json.loads(future.text)
     endId = jsonText_1["Result"]
 
-    trainTypeStr = trainType
-    arguments = {"trainType":trainTypeStr, "rId":routeId, "seatClass":seatClass}
+    airplaneTypeStr = airplaneType
+    arguments = {"airplaneType":airplaneTypeStr, "rId":routeId, "seatClass":seatClass}
     start = time.time()
     future = requests.post(url_func_5, params=parameters, auth=authentication, json=arguments, verify=False)
     end = time.time()
@@ -171,13 +171,13 @@ def main(params):
 
     returnResult.prices = prices
     returnResult.percent = 1
-    returnResult.trainType = trainType
+    returnResult.airplaneType = airplaneType
 
     return {
         "Result": {
             "status": returnResult.status,
             "percent": returnResult.percent,
-            "trainType": returnResult.trainType,
+            "airplaneType": returnResult.airplaneType,
             "prices": returnResult.prices
         }
     }
