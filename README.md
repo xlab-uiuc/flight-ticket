@@ -81,7 +81,7 @@ https://files.osf.io/v1/resources/6398x/providers/osfstorage/5ff8362686541a01281
 Unzip it under the root folder:
 
 ```shell
-unzip flight-ticket-master.zip -d clean
+unzip clean.zip -d clean
 ```
 
 Next, build and push docker images, deploy functions as OpenWhisk actions then create sequence (workflow).
