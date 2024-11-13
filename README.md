@@ -15,6 +15,7 @@ Deploy a minikube cluster
 minikube start --cpus=8
 ```
 
+### Deploy OpenWhisk
 Install and initialize helm for deploying openwhisk
 ```
 curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
@@ -65,9 +66,11 @@ wsk property set --apihost <whisk.ingress.apiHostName>:<whisk.ingress.apiHostPor
 wsk property set --auth 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
 ```
 
+### Deploy FlightTicket
+
 Edit the airplaneTicket functions to reflect your minikube cluster running openwhisk, there are only four functions which use the APIHOST variable (SeatService, QueryForTravel, GetRouteByTripId, CancelService). Add your `minikube_IP:OW_PORT` to the `APIHOST` variable of those four functions e.g.  APIHOST = "http://192.168.49.2:31001"
 ```
-cd /home/alan/work/multi_stage_apps/airplaneTicket/src
+cd flight-ticket
 vim QueryForTravel/__main__.py # edit APIHOST as described above
 (do this for the rest of the functions)
 ```
@@ -88,7 +91,6 @@ sudo apt update
 sudo apt install redis-server
 sudo service redis-server start
 pip install redis
-cd /work/multi_stage_apps/airplaneTicket/src
 ./deploy_ow_actions.sh
 ```
 
