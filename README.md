@@ -72,14 +72,8 @@ vim QueryForTravel/__main__.py # edit APIHOST as described above
 (do this for the rest of the functions)
 ```
 
-Build and push docker images, deploy functions as OpenWhisk actions then create sequence (workflow)
-```
-./deploy_ow_actions
-```
-Download airline-tickets-usa data from OSF:
-https://files.osf.io/v1/resources/6398x/providers/osfstorage/5ff8362686541a012814b8a4/?zip=
-
-Now we need to deploy Redis and populate it with AirplaneTicket data (only to be done once):
+Build and push docker images, deploy functions as OpenWhisk actions then create sequence (workflow).
+Also, we need to deploy Redis and populate it with AirplaneTicket data (only to be done once):
 ```
 sudo apt update
 sudo apt install redis-server
@@ -88,6 +82,9 @@ pip install redis
 cd /work/multi_stage_apps/airplaneTicket/src
 ./deploy_ow_actions.sh
 ```
+
+Download airline-tickets-usa data from OSF:
+https://files.osf.io/v1/resources/6398x/providers/osfstorage/5ff8362686541a012814b8a4/?zip=
 
 Run workflow with eventing:
 ```
