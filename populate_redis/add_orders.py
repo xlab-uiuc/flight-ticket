@@ -33,6 +33,7 @@ contact_names = [
 ]
 
 stations = myclient.hgetall("station")
+station_names = [name.decode('utf-8') for name in stations.values()]
 
 for i in range(1, 201):
     order_id = f"ord-{i}"
@@ -47,11 +48,13 @@ for i in range(1, 201):
     coach_num = random.randint(1, 20)
     seat_class = random.choice(["Economy", "Comfort", "Business"])
     seat_num = random.randint(1, 100)
-    st_from = random.choice(stations)
-    st_to = random.choice(stations)
+    
+    st_from = random.choice(station_names)
+    st_to = random.choice(station_names)
     while st_from == st_to:
-        st_to = random.choice(stations)
-    stat = random.randint(0,2)
+        st_to = random.choice(station_names)
+    
+    stat = random.randint(0, 2)
     price = random_price()
 
     myclient.hset("boughtDate", order_id, bought_date)

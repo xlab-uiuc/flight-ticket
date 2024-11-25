@@ -13,3 +13,4 @@ for i in range(1, 601):
     userId = f"id_{i}"
     myclient.hset("money", userId, money)
 
+print("Money added")

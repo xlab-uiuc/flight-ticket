@@ -7,34 +7,6 @@ import ast
 import time
 from datetime import datetime, timedelta
 
-def log_performance():
-    global request_count
-    global start_time_logging
-
-    with open("record.log", "a") as log_file:
-        while True:
-           
-            current_time = time.time()
-            elapsed_time = current_time - start_time_logging
-
-            
-            if elapsed_time >= 1:
-             
-                rps = request_count / elapsed_time if elapsed_time > 0 else 0
-                
-              
-                avg_latency = np.mean(latency_records) if latency_records else 0
-                
-               
-                log_file.write(f"{avg_latency:.2f};{rps:.2f}\n")
-                log_file.flush()  # Ensure that it writes to the file immediately
-                
-        
-                request_count = 0
-                start_time_logging = current_time
-            
-            time.sleep(0.1)
-
 def EnforceActivityWindow(start_time, end_time, instance_events):
     events_iit = []
     events_abs = [0] + instance_events
@@ -53,6 +25,14 @@ def write_p99_to_file(latencies, file_name="p99.txt"):
     p99_latency = calculate_p99(latencies)
     with open(file_name, "w") as f:
         f.write(f'P99 latency: {p99_latency} ms\n')
+
+def calculate_average(latencies):
+    return sum(latencies) / len(latencies) if latencies else 0
+
+def write_average_latency_to_file(latencies, file_name="average_latency.txt"):
+    avg_latency = calculate_average(latencies)
+    with open(file_name, "w") as f:
+        f.write(f'Average latency: {avg_latency:.2f} ms\n')
 
 def time_invocation(command):
     start = time.time()
@@ -143,9 +123,6 @@ def main():
 
     client = redis.Redis(host="localhost", port=6379, db=1)
 
-    logging_thread = threading.Thread(target=log_performance, daemon=True)
-    logging_thread.start()
-
     start_time = time.time()
     while time.time() - start_time < minutes:
         for load in loads:
@@ -173,6 +150,7 @@ def main():
                 time.sleep(inter_arrival)
                 
     write_p99_to_file(latencies)
+    write_average_latency_to_file(latencies)
 
 if __name__ == "__main__":
     main()

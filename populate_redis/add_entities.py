@@ -14,3 +14,5 @@ def generate_percent():
 
 for i in range(1, 401):
     myclient.hset("entities", f"t{i}", json.dumps(generate_percent()))
+
+print("entities added")

@@ -21,7 +21,7 @@ redis_client = redis.StrictRedis(host='localhost', port=6379, decode_responses=T
 station_key = "station"
 redis_client.delete(station_key)
 data_in = os.path.join(os.getcwd(), "clean/raw/")
-file_paths = glob.glob(os.path.join(data_in, "DB1B_TICKETS_COUPONS_20*"))
+file_paths = glob.glob(os.path.join(data_in, "DB1B_TICKETS_COUPONS_2016_1*"))
 
 all_unique_stations = set()
 with ProcessPoolExecutor() as executor:
