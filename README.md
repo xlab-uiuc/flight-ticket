@@ -75,9 +75,6 @@ vim QueryForTravel/__main__.py # edit APIHOST as described above
 (do this for the rest of the functions)
 ```
 
-Download flight ticket data from OSF:
-https://files.osf.io/v1/resources/6398x/providers/osfstorage/5ff8362686541a012814b8a4/?zip=
-
 Unzip it under the root folder:
 
 ```shell
@@ -93,6 +90,9 @@ sudo service redis-server start
 pip install redis
 ./deploy_ow_actions.sh
 ```
+
+Download flight ticket data from OSF:
+https://files.osf.io/v1/resources/6398x/providers/osfstorage/5ff8362686541a012814b8a4/?zip=
 
 Run workflow with eventing:
 ```
