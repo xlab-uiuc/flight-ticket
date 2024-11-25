@@ -1,5 +1,5 @@
 #!/bin/bash
-for dir in */; do
+for dir in actions/*; do
     ( 
         cd "$dir" || continue
         docker run --rm -v "$PWD:/tmp" openwhisk/python3action bash -c \
