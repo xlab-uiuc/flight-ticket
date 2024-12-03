@@ -57,8 +57,8 @@ def invoke_query(client):
     end_index = random.randint(start_index + 1, len(route) - 1)
 
     # grab station names
-    startSt = client.hget("sId", route[start_index]).decode('utf-8')
-    endSt = client.hget("sId", route[end_index]).decode('utf-8')
+    startSt = route[start_index]
+    endSt = route[end_index]
 
     # grab airplane
     random_airplane = f"t{random.randint(1, 100)}"
@@ -77,14 +77,15 @@ def invoke_seat_service(client):
     stations = {key.decode('utf-8'): ast.literal_eval(value.decode('utf-8')) for key, value in stations.items()}
 
     num_routes = len(stations)
+    print(num_routes)
     random_route = f"r{random.randint(1, num_routes)}"
     route = stations.get(random_route)
     start_index = random.randint(0, len(route) - 2)
     end_index = random.randint(start_index + 1, len(route) - 1)
 
     # grab station names
-    startSt = client.hget("sId", route[start_index]).decode('utf-8')
-    endSt = client.hget("sId", route[end_index]).decode('utf-8')
+    startSt = route[start_index]
+    endSt = route[end_index]
 
     trip_id = f"t{random.randint(1, 400)}"
     travel_date = (datetime.now() + timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
