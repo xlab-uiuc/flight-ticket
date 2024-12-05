@@ -4,9 +4,9 @@ import redis
 import ast
 
 class Seat:
-    def __init__(self, _travelDate, _airplaneNumber, _startStation, _destStation, _seatType):
+    def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
         self.travelDate = _travelDate
-        self.airplaneNumber = _airplaneNumber
+        self.planeNumber = _planeNumber
         self.startStation = _startStation
         self.destStation = _destStation
         self.seatType = _seatType

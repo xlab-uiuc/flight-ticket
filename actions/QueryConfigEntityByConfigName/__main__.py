@@ -4,14 +4,14 @@ import ast
 import time
 
 class Seat:
-    def __init__(self, _travelDate, _airplaneNumber, _startStation, _destStation, _seatType):
+    def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
         self.travelDate = _travelDate
-        self.airplaneNumber = _airplaneNumber
+        self.planeNumber = _planeNumber
         self.startStation = _startStation
         self.destStation = _destStation
         self.seatType = _seatType
 
-class AirplaneType:
+class planeType:
     def __init__(self, _id, _economyClass, _confortClass, _avgSpeed):
         self.id = _id
         self.economyClass = _economyClass

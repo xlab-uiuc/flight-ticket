@@ -5,9 +5,9 @@ import time
 import ast
 
 class Seat:
-    def __init__(self, _travelDate, _airplaneNumber, _startStation, _destStation, _seatType):
+    def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
         self.travelDate = _travelDate
-        self.airplaneNumber = _airplaneNumber
+        self.planeNumber = _planeNumber
         self.startStation = _startStation
         self.destStation = _destStation
         self.seatType = _seatType
@@ -45,17 +45,17 @@ class Config:
 
 def fake_main(params):
     tripId = params["tripId"]
-    airplaneType = AircraftType(random.randint(0,20), random.randint(150,350), random.randint(20,100), random.randint(120,200))
-    print(json.dumps(airplaneType.__dict__))
+    planeType = AircraftType(random.randint(0,20), random.randint(150,350), random.randint(20,100), random.randint(120,200))
+    print(json.dumps(planeType.__dict__))
     time.sleep(0.1)
-    return {"Result":json.dumps(airplaneType.__dict__)}
+    return {"Result":json.dumps(planeType.__dict__)}
 
 def main(params):
-    airplaneId = params["airplaneTypeId"]
+    planeId = params["planeTypeId"]
     myclient = redis.Redis(host="host.minikube.internal",port="6379",db=1)
-    airplaneTypeRedisByte = myclient.hget("airplaneType",airplaneId)
-    airplaneTypeRedisStr = airplaneTypeRedisByte.decode("utf-8")
-    airplaneTypeRedis = ast.literal_eval(airplaneTypeRedisStr)
-    airplaneType = AircraftType(airplaneTypeRedis["id"],airplaneTypeRedis["economyClass"],airplaneTypeRedis["confortClass"],airplaneTypeRedis["avgSpeed"])
-    print(json.dumps(airplaneType.__dict__))
-    return {"Result":json.dumps(airplaneType.__dict__)}
+    planeTypeRedisByte = myclient.hget("planeType",planeId)
+    planeTypeRedisStr = planeTypeRedisByte.decode("utf-8")
+    planeTypeRedis = ast.literal_eval(planeTypeRedisStr)
+    planeType = AircraftType(planeTypeRedis["id"],planeTypeRedis["economyClass"],planeTypeRedis["confortClass"],planeTypeRedis["avgSpeed"])
+    print(json.dumps(planeType.__dict__))
+    return {"Result":json.dumps(planeType.__dict__)}

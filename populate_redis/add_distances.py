@@ -38,13 +38,11 @@ combined_data = pd.concat(all_routes, ignore_index=True).drop_duplicates(subset=
 combined_data['stations'] = combined_data['route'].apply(lambda x: json.dumps([x[i:i+3] for i in range(0, len(x), 3)]))
 
 pipeline = redis_client.pipeline()
-r = 1
 for idx, row in combined_data.iterrows():
-    pipeline.hset(stations_key, f"r{r}", row['stations'])
-    pipeline.hset(distances_key, f"r{r}", row['distance'])
-    pipeline.hset(start_station_key, f"r{r}", row['origin'])
-    pipeline.hset(dest_station_key, f"r{r}", row['destination'])
-    r += 1
+    pipeline.hset(stations_key, row['route'], row['stations'])
+    pipeline.hset(distances_key, row['route'], row['distance'])
+    pipeline.hset(start_station_key, row['route'], row['origin'])
+    pipeline.hset(dest_station_key, row['route'], row['destination'])
 
 pipeline.execute()
 

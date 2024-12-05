@@ -4,9 +4,9 @@ import redis
 import ast
 
 class Seat:
-    def __init__(self, _travelDate, _airplaneNumber, _startStation, _destStation, _seatType):
+    def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
         self.travelDate = _travelDate
-        self.airplaneNumber = _airplaneNumber
+        self.planeNumber = _planeNumber
         self.startStation = _startStation
         self.destStation = _destStation
         self.seatType = _seatType
@@ -43,7 +43,7 @@ class Config:
         self.descr = _descr
 
 class Order:
-    def __init__(self, _id, _boughtDate, _travelDate, _travelTime, _accountId, _contactsName, _docType, _docNum, _airplaneNum, _coachNum, _seatClass, _seatNum, _stFrom, _stTo, _stat, _price):
+    def __init__(self, _id, _boughtDate, _travelDate, _travelTime, _accountId, _contactsName, _docType, _docNum, _planeNum, _coachNum, _seatClass, _seatNum, _stFrom, _stTo, _stat, _price):
         self.id = _id
         self.boughtDate = _boughtDate
         self.travelDate = _travelDate
@@ -52,7 +52,7 @@ class Order:
         self.contactsName = _contactsName
         self.docType = _docType
         self.docNum = _docNum
-        self.airplaneNum = _airplaneNum
+        self.planeNum = _planeNum
         self.coachNum = _coachNum
         self.seatClass = _seatClass
         self.seatNum = _seatNum
@@ -71,7 +71,7 @@ def main(params):
     ordContactsName = myclient.hget("contactsName",orderId).decode("utf-8")
     ordDocType = myclient.hget("docType",orderId).decode("utf-8")
     ordDocNum = myclient.hget("docNum",orderId).decode("utf-8")
-    ordPlaneNum = myclient.hget("airplaneNum",orderId).decode("utf-8")
+    ordPlaneNum = myclient.hget("planeNum",orderId).decode("utf-8")
     ordCoachNum = myclient.hget("coachNum",orderId).decode("utf-8")
     ordSeatClass = myclient.hget("seatClass",orderId).decode("utf-8")
     ordSeatNum = myclient.hget("seatNum",orderId).decode("utf-8")

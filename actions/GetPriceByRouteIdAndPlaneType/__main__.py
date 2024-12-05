@@ -4,9 +4,9 @@ import redis
 import ast
 
 class Seat:
-    def __init__(self, _travelDate, _airplaneNumber, _startStation, _destStation, _seatType):
+    def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
         self.travelDate = _travelDate
-        self.airplaneNumber = _airplaneNumber
+        self.planeNumber = _planeNumber
         self.startStation = _startStation
         self.destStation = _destStation
         self.seatType = _seatType
@@ -44,13 +44,13 @@ class Config:
 
 def main(params):
     routeId = params["rId"]
-    airplaneType = params["airplaneType"]
+    planeType = params["planeType"]
     seatClass = params["seatClass"]
     myclient = redis.Redis(host="host.minikube.internal",port="6379",db=1)
     prices = myclient.hget("priceRoute", routeId)
     prices = prices.decode("utf-8") 
     prices = ast.literal_eval(prices)
     print(f"prices: {prices}")
-    print(f"airplaneType: {airplaneType}")
+    print(f"planeType: {planeType}")
     price = prices[seatClass]
     return {"Result": {"basic_rate":price["basic"], "first_class_rate":price["first_class"]}}

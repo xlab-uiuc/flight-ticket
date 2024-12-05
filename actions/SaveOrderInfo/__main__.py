@@ -4,14 +4,14 @@ import redis
 import ast
 
 class Seat:
-    def __init__(self, _travelDate, _airplaneNumber, _startStation, _destStation, _seatType):
+    def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
         self.travelDate = _travelDate
-        self.airplaneNumber = _airplaneNumber
+        self.planeNumber = _planeNumber
         self.startStation = _startStation
         self.destStation = _destStation
         self.seatType = _seatType
 
-class AirplaneType:
+class planeType:
     def __init__(self, _id, _economyClass, _confortClass, _avgSpeed):
         self.id = _id
         self.economyClass = _economyClass
@@ -43,7 +43,7 @@ class Config:
         self.descr = _descr
 
 class Order:
-    def __init__(self, _id, _boughtDate, _travelDate, _travelTime, _accountId, _contactsName, _docType, _docNum, _airplaneNum, _coachNum, _seatClass, _seatNum, _stFrom, _stTo, _stat, _price):
+    def __init__(self, _id, _boughtDate, _travelDate, _travelTime, _accountId, _contactsName, _docType, _docNum, _planeNum, _coachNum, _seatClass, _seatNum, _stFrom, _stTo, _stat, _price):
         self.id = _id
         self.boughtDate = _boughtDate
         self.travelDate = _travelDate
@@ -52,7 +52,7 @@ class Order:
         self.contactsName = _contactsName
         self.docType = _docType
         self.docNum = _docNum
-        self.airplaneNum = _airplaneNum
+        self.planeNum = _planeNum
         self.coachNum = _coachNum
         self.seatClass = _seatClass
         self.seatNum = _seatNum
@@ -65,7 +65,7 @@ def main(params):
     print(params)
     dictText_1 = params
     dictText_1 = dictText_1.get('order', {})
-    orderResult = Order(dictText_1.get("id"),dictText_1.get("boughtDate"),dictText_1.get("travelDate"),dictText_1.get("travelTime"),dictText_1.get("accountId"),dictText_1.get("contactsName"),dictText_1.get("docType"),dictText_1.get("docNum"),dictText_1.get("airplaneNum"),dictText_1.get("coachNum"),dictText_1.get("seatClass"),dictText_1.get("seatNum"),dictText_1.get("stFrom"),dictText_1.get("stTo"),dictText_1.get("stat"),dictText_1.get("price"))
+    orderResult = Order(dictText_1.get("id"),dictText_1.get("boughtDate"),dictText_1.get("travelDate"),dictText_1.get("travelTime"),dictText_1.get("accountId"),dictText_1.get("contactsName"),dictText_1.get("docType"),dictText_1.get("docNum"),dictText_1.get("planeNum"),dictText_1.get("coachNum"),dictText_1.get("seatClass"),dictText_1.get("seatNum"),dictText_1.get("stFrom"),dictText_1.get("stTo"),dictText_1.get("stat"),dictText_1.get("price"))
     myclient = redis.Redis(host="host.minikube.internal",port="6379",db=1)
     print(params)
     print(orderResult.id)
@@ -80,7 +80,7 @@ def main(params):
     myclient.hset("contactsName",orderId,orderResult.contactsName)
     myclient.hset("docType",orderId,orderResult.docType)
     myclient.hset("docNum",orderId,orderResult.docNum)
-    myclient.hset("airplaneNum",orderId,orderResult.airplaneNum)
+    myclient.hset("planeNum",orderId,orderResult.planeNum)
     myclient.hset("coachNum",orderId,orderResult.coachNum)
     myclient.hset("seatClass",orderId,orderResult.seatClass)
     myclient.hset("seatNum",orderId,orderResult.seatNum)
