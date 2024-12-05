@@ -1,4 +1,4 @@
-#!/bin/bash
+#   !/bin/bash
 for dir in actions/*; do
     ( 
         cd "$dir" || continue
@@ -28,9 +28,9 @@ python3 populate_redis/add_station.py
 python3 populate_redis/add_entities.py
 python3 populate_redis/add_money.py
 python3 populate_redis/add_orders.py
+python3 populate_redis/add_trips.py
 python3 populate_redis/add_planes.py
 python3 populate_redis/add_priceroute.py
 python3 populate_redis/add_sId.py
 python3 populate_redis/add_sold_tickets.py
-python3 populate_redis/add_trips.py
 # python3 populate_redis/reset_order_status.py

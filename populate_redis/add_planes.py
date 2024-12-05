@@ -53,7 +53,8 @@ with ProcessPoolExecutor() as executor:
 
 pipeline = redis_client.pipeline()
 for route, plane_type_data in all_plane_types.items():
-    pipeline.hset(planeType_key, route, plane_type_data)
+    tripId = pipeline.hget("rId", route)
+    pipeline.hset(planeType_key, tripId, plane_type_data)
 pipeline.execute()
 
 print(f"Total plane types stored in Redis: {redis_client.hlen(planeType_key)}")

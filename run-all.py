@@ -71,7 +71,7 @@ def invoke_query(client):
     return time_invocation(invoke_query_cmd)
 
 # running seat-service
-# wsk -i action invoke seat-service --param tripId "t300" --param "date" "10-23-2024" --param startStation "Mount Prospect" --param destStation "Decatur" --param seatClass "economyClass" --blocking --result
+# wsk -i action invoke seat-service --param tripId "201601387274" --param "date" "12-23-2024" --param startStation "SFO" --param destStation "SFO" --param seatClass "economyClass" --blocking --result
 def invoke_seat_service(client):
     stations = client.hgetall("stations")
     stations = {key.decode('utf-8'): ast.literal_eval(value.decode('utf-8')) for key, value in stations.items()}
