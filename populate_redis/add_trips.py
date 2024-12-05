@@ -15,8 +15,10 @@ def process_file(file_path, chunk_size=10000):
     return pd.concat(trip_data, ignore_index=True)
 
 redis_client = redis.StrictRedis(host='localhost', port=6379, decode_responses=True, db=1)
-trips_key = "rId"
+rId_key = "rId"
+trips_key = "trips"
 redis_client.delete(trips_key)
+redis_client.delete(rId_key)
 data_in = os.path.join(os.getcwd(), "clean/raw/")
 file_paths = glob.glob(os.path.join(data_in, "DB1B_TICKETS_COUPONS_2016_1*"))
 
@@ -29,7 +31,8 @@ with ProcessPoolExecutor() as executor:
 combined_trips = pd.concat(all_trips, ignore_index=True).drop_duplicates(subset='flight_id')
 pipeline = redis_client.pipeline()
 for _, row in combined_trips.iterrows():
-    pipeline.hset(trips_key, int(row['flight_id']), row['route'])
+    pipeline.hset(rId_key, int(row['flight_id']), row['route'])
+    pipeline.hset(trips_key, row['route'], int(row['flight_id']))
 pipeline.execute()
 
 total_trips = redis_client.hlen(trips_key)

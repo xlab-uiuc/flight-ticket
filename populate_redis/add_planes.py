@@ -52,7 +52,7 @@ with ProcessPoolExecutor() as executor:
 
 trip_ids = {}
 for route in all_plane_types.keys():
-    tripId = redis_client.hget("rId", route)
+    tripId = redis_client.hget("trips", route)
     if tripId:
         trip_ids[route] = tripId
 

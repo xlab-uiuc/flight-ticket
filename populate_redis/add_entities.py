@@ -1,6 +1,7 @@
+import json
 import random
 import redis
-import json
+import ast
 
 myclient = redis.Redis(host="localhost", port=6379, db=1)
 
@@ -12,7 +13,10 @@ def generate_percent():
     }
     return value
 
-for i in range(1, 401):
-    myclient.hset("entities", f"t{i}", json.dumps(generate_percent()))
+trips = myclient.hgetall("trips")
+trips = {key.decode('utf-8'): ast.literal_eval(value.decode('utf-8')) for key, value in trips.items()}
+
+for trip in trips:
+    myclient.hset("entities", trip, json.dumps(generate_percent()))
 
 print("entities added")
