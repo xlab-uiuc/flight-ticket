@@ -15,7 +15,7 @@ def process_file(file_path, chunk_size=10000):
     return pd.concat(trip_data, ignore_index=True)
 
 redis_client = redis.StrictRedis(host='localhost', port=6379, decode_responses=True, db=1)
-trips_key = "trips"
+trips_key = "rId"
 redis_client.delete(trips_key)
 data_in = os.path.join(os.getcwd(), "clean/raw/")
 file_paths = glob.glob(os.path.join(data_in, "DB1B_TICKETS_COUPONS_2016_1*"))

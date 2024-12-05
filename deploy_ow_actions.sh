@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 for dir in actions/*; do
     ( 
         cd "$dir" || continue
