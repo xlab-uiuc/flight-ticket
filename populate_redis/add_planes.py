@@ -44,17 +44,23 @@ def process_file(file_path, chunk_size=10000):
 
     return plane_types
 
-
 all_plane_types = {}
 with ProcessPoolExecutor() as executor:
     results = executor.map(process_file, file_paths)
     for result in results:
         all_plane_types.update(result)
 
+trip_ids = {}
+for route in all_plane_types.keys():
+    tripId = redis_client.hget("rId", route)
+    if tripId:
+        trip_ids[route] = tripId
+
 pipeline = redis_client.pipeline()
 for route, plane_type_data in all_plane_types.items():
-    tripId = pipeline.hget("rId", route)
-    pipeline.hset(planeType_key, tripId, plane_type_data)
+    tripId = trip_ids.get(route)
+    if tripId:
+        pipeline.hset(planeType_key, tripId, plane_type_data)
 pipeline.execute()
 
 print(f"Total plane types stored in Redis: {redis_client.hlen(planeType_key)}")
