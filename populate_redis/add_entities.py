@@ -16,7 +16,7 @@ def generate_percent():
 trips = myclient.hgetall("trips")
 trips = {key.decode('utf-8'): ast.literal_eval(value.decode('utf-8')) for key, value in trips.items()}
 
-for trip in trips:
-    myclient.hset("entities", trip, json.dumps(generate_percent()))
+for trip_key, trip_value in trips.items():
+    myclient.hset("entities", json.dumps(trip_value), json.dumps(generate_percent()))
 
 print("entities added")

@@ -53,7 +53,7 @@ def fake_main(params):
 def main(params):
     planeId = params["planeTypeId"]
     myclient = redis.Redis(host="host.minikube.internal",port="6379",db=1)
-    planeTypeRedisByte = myclient.hget("planeType",planeId)
+    planeTypeRedisByte = myclient.hget("planeType", planeId)
     planeTypeRedisStr = planeTypeRedisByte.decode("utf-8")
     planeTypeRedis = ast.literal_eval(planeTypeRedisStr)
     planeType = AircraftType(planeTypeRedis["id"],planeTypeRedis["economyClass"],planeTypeRedis["confortClass"],planeTypeRedis["avgSpeed"])

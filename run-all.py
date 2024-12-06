@@ -45,7 +45,7 @@ def time_invocation(command):
     return (end - start) * 1000
 
 # running query-for-travel
-# wsk -i action invoke query-for-travel --param start "Springfield" --param end "Cicero" --param "planeTypeId" t1 --param "rId" r51 --param seatClass "economyClass" --blocking --result
+# wsk -i action invoke query-for-travel --param start "SFO" --param end "SFO" --param "planeTypeId" t1 --param "rId" SFOPHXBOSCLTSFO --param seatClass "economyClass" --blocking --result
 def invoke_query(client):
     stations = client.hgetall("stations")
     stations = {key.decode('utf-8'): ast.literal_eval(value.decode('utf-8')) for key, value in stations.items()}

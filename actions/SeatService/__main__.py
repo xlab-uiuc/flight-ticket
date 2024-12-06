@@ -98,6 +98,7 @@ def main(params):
     
     stationList = []
     stationList = routeResult.stations
+    print(routeResult.stations)
 
     soldTicketSize = 0
     if leftTicketInfo is not None:
@@ -121,7 +122,7 @@ def main(params):
     jsonText_4 = json.loads(future.text)
     direstPart = float((jsonText_4["Result"]))
 
-    if (routeResult.stations[0] == params["startStation"] and routeResult.stations[len(routeResult.stations()) - 1] == params["destStation"]):
+    if (routeResult.stations[0] == params["startStation"] and routeResult.stations[len(routeResult.stations) - 1] == params["destStation"]):
         direstPart = direstPart
     else:
         direstPart = 1.0 - direstPart
@@ -129,4 +130,4 @@ def main(params):
     numOfLeftTickets += unusedNum
     endBig = time.time()
     print("Overall time = ", endBig - startBig)
-    return {"Result": "Good!"}
+    return {"Result": "Seat Service success!"}
