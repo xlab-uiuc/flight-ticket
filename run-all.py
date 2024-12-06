@@ -49,9 +49,9 @@ def time_invocation(command):
 def invoke_query(client):
     stations = client.hgetall("stations")
     stations = {key.decode('utf-8'): ast.literal_eval(value.decode('utf-8')) for key, value in stations.items()}
+    keys = client.hkeys("stations")
+    random_route = random.choice(keys).decode('utf-8')
 
-    num_routes = len(stations)
-    random_route = f"r{random.randint(1, num_routes)}"
     route = stations.get(random_route)
     start_index = random.randint(0, len(route) - 2)
     end_index = random.randint(start_index + 1, len(route) - 1)
@@ -61,7 +61,7 @@ def invoke_query(client):
     endSt = route[end_index]
 
     # grab plane
-    random_plane = f"t{random.randint(1, 100)}"
+    random_plane = client.hget("trips", random_route).decode('utf-8')
 
     # select random seat class
     seat_class = random.choice(["economyClass", "confortClass"])
@@ -75,10 +75,10 @@ def invoke_query(client):
 def invoke_seat_service(client):
     stations = client.hgetall("stations")
     stations = {key.decode('utf-8'): ast.literal_eval(value.decode('utf-8')) for key, value in stations.items()}
+    keys = client.hkeys("stations")
+    random_route = random.choice(keys).decode('utf-8')
 
-    num_routes = len(stations)
-    print(num_routes)
-    random_route = f"r{random.randint(1, num_routes)}"
+    print(random_route)
     route = stations.get(random_route)
     start_index = random.randint(0, len(route) - 2)
     end_index = random.randint(start_index + 1, len(route) - 1)
@@ -87,7 +87,8 @@ def invoke_seat_service(client):
     startSt = route[start_index]
     endSt = route[end_index]
 
-    trip_id = f"t{random.randint(1, 400)}"
+    trip_id = client.hget("trips", random_route).decode('utf-8')
+
     travel_date = (datetime.now() + timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
     seat_class = random.choice(["economyClass", "confortClass"])
 
@@ -101,8 +102,8 @@ def invoke_cancel_service(calls_count):
     order = f"ord-{random.randint(1,200)}"
     loginId = f"id_{random.randint(1,600)}"
 
-    if calls_count % 50 == 0:
-        reset_orders_to_active_status_cmd = "python3 reset_order_status.py"
+    if calls_count % 50 == 0 and calls_count != 0:
+        reset_orders_to_active_status_cmd = "python3 populate_redis/reset_order_status.py"
         subprocess.run(reset_orders_to_active_status_cmd, shell=True, check=True)
 
     invoke_cancel_service_cmd = f"wsk -i action invoke cancel-service --param orderId \"{order}\" --param loginId \"{loginId}\" --result --blocking"
@@ -141,8 +142,8 @@ def main():
 
                 print(inter_arrival)
                 
-                #latencies.append(invoke_cancel_service(calls_count))
-                #latencies.append(invoke_query(client))
+                latencies.append(invoke_cancel_service(calls_count))
+                latencies.append(invoke_query(client))
                 latencies.append(invoke_seat_service(client))
                 
                 calls_count += 1
