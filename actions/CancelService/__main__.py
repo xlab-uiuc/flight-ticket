@@ -3,7 +3,6 @@ import json
 import time
 from datetime import datetime
 import sys
-sys.path.append('../../utils')
 from utils import utils
 
 class Seat:

@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+from utils import utils
 
 class Seat:
     def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
@@ -59,8 +60,9 @@ class TravelResult:
 def main(params):
 
     returnResult = TravelResult(True, 100, 1, {"map":"map"})
-    APIHOST = "https://192.168.49.2:31001"
-    AUTH_KEY = "23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP" 
+    config = utils.load_config()
+    APIHOST = config.get("APIHOST")
+    AUTH_KEY = config.get("AUTH_KEY")
     user_pass = AUTH_KEY.split(':')
     base_url = APIHOST + '/api/v1/namespaces/guest/actions/'
     url_func_3 = base_url + "get-route-by-route-id"

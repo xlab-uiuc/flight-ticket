@@ -4,7 +4,7 @@ for dir in actions/*; do
         cd "$dir" || continue
         docker run --rm -v "$PWD:/tmp" openwhisk/python3action bash -c \
         "cd /tmp && virtualenv virtualenv && source virtualenv/bin/activate && pip install -r requirements.txt"
-        zip -r function.zip ./*
+        zip -r function.zip ./* ../../utils/ ../../ow.config
     )
 done
 
