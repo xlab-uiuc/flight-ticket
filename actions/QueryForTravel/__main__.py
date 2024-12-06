@@ -157,13 +157,13 @@ def main(params):
     print(first_class_rate)
 
     print(f"routeResult.stations: {routeResult.stations}")
-    indexStart = routeResult.stations.index(startId)
+    indexStart = routeResult.stations.index(startSt)
     print(f"indexStart: {indexStart}")
-    indexEnd = routeResult.stations.index(endId)
+    indexEnd = routeResult.stations.index(endSt)
     print(f"indexEnd: {indexEnd}")
     print(f"routeResult.distances: {routeResult.distances}")
 
-    distance = routeResult.distances[indexEnd] - routeResult.distances[indexStart]
+    distance = routeResult.distances
     print(f"Distances: {distance}")
     prices = {}
     prices["basic"] = distance * basic_rate
