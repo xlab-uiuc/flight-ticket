@@ -83,11 +83,11 @@ def calcReturn(_myOrder):
 
 def main(params):
     config = utils.load_config()
-    APIHOST = config.get("APIHOST")
-    AUTH_KEY = config.get("AUTH_KEY")
+    WSK_API_HOST = config.get("WSK_API_HOST")
+    WSK_AUTH_KEY = config.get("WSK_AUTH_KEY")
     
-    user_pass = AUTH_KEY.split(':')
-    base_url = APIHOST + '/api/v1/namespaces/guest/actions/'
+    user_pass = WSK_AUTH_KEY.split(':')
+    base_url = WSK_API_HOST + '/api/v1/namespaces/guest/actions/'
     url_func_23 = base_url + "get-order-by-id"
     url_func_28 = base_url + "drawback"
     url_func_29 = base_url + "save-order-info"

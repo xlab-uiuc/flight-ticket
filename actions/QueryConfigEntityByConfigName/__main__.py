@@ -2,6 +2,7 @@ import redis
 import random
 import ast
 import time
+from utils import utils
 
 class Seat:
     def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
@@ -49,8 +50,12 @@ def fake_main(params):
     return {"Result":percent}
 
 def main(params):
+    config = utils.load_config()
+    REDIS_HOST = config.get("REDIS_HOST")
+    REDIS_PORT = config.get("REDIS_PORT")
+
     tripId = params["tripId"]
-    myclient = redis.Redis(host="host.minikube.internal",port="6379",db=1)
+    myclient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=1)
     valueRedis = ast.literal_eval(myclient.hget("entities",tripId).decode("utf-8"))
     percent = valueRedis["value"]
     return {"Result":percent}

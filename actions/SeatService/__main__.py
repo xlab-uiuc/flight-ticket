@@ -45,10 +45,10 @@ class Config:
 def main(params):
     startBig = time.time()
     config = utils.load_config()
-    APIHOST = config.get("APIHOST")
-    AUTH_KEY = config.get("AUTH_KEY")
-    user_pass = AUTH_KEY.split(':')
-    base_url = APIHOST + '/api/v1/namespaces/guest/actions/'
+    WSK_API_HOST = config.get("WSK_API_HOST")
+    WSK_AUTH_KEY = config.get("WSK_AUTH_KEY")
+    user_pass = WSK_AUTH_KEY.split(':')
+    base_url = WSK_API_HOST + '/api/v1/namespaces/guest/actions/'
     url_func_9 = base_url + "get-route-by-trip-id"
     url_func_10 = base_url + "get-sold-tickets"
     url_func_11 = base_url + "get-plane-type-by-trip-id"

@@ -84,15 +84,18 @@ def fake_main(params):
 
 def main(params):
     config = utils.load_config()
-    APIHOST = config.get("APIHOST")
-    AUTH_KEY = config.get("AUTH_KEY")
-    user_pass = AUTH_KEY.split(':')
+    WSK_API_HOST = config.get("WSK_API_HOST")
+    WSK_AUTH_KEY = config.get("WSK_AUTH_KEY")
+    REDIS_HOST = config.get("REDIS_HOST")
+    REDIS_PORT = config.get("REDIS_PORT")
+
+    user_pass = WSK_AUTH_KEY.split(':')
     authentication = (user_pass[0], user_pass[1])
     parameters = {'blocking': 'true', 'result': 'true'}
-    base_url = APIHOST + '/api/v1/namespaces/guest/actions/'
+    base_url = WSK_API_HOST + '/api/v1/namespaces/guest/actions/'
     url_func_9 = base_url + "get-route-by-route-id"
     tripId = params["tripId"]
-    myclient = redis.Redis(host="host.minikube.internal",port="6379",db=1)
+    myclient = redis.Redis(host=REDIS_HOST,port=REDIS_PORT,db=1)
     rId = myclient.hget("rId",tripId).decode("utf-8")
     arguments = {'rId':rId}
     print(f"rId: {rId}")

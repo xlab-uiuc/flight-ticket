@@ -66,13 +66,9 @@ wsk property set --apihost <whisk.ingress.apiHostName>:<whisk.ingress.apiHostPor
 wsk property set --auth 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
 ```
 
-### Deploy FlightTicket
+Edit ow.config with the openwhisk API HOST and AUTH KEY, as well as your Redis HOST and PORT.
 
-```
-cd flight-ticket
-vim QueryForTravel/__main__.py # edit APIHOST as described above
-(do this for the rest of the functions)
-```
+### Deploy FlightTicket
 
 Unzip it under the root folder:
 

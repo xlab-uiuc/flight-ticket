@@ -2,6 +2,7 @@ import json
 import time
 import redis
 import ast
+from utils import utils
 
 class Seat:
     def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
@@ -43,10 +44,14 @@ class Config:
         self.descr = _descr
 
 def main(params):
+    config = utils.load_config()
+    REDIS_HOST = config.get("REDIS_HOST")
+    REDIS_PORT = config.get("REDIS_PORT")
+
     routeId = params["rId"]
     planeType = params["planeType"]
     seatClass = params["seatClass"]
-    myclient = redis.Redis(host="host.minikube.internal",port="6379",db=1)
+    myclient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT,db=1)
     prices = myclient.hget("priceRoute", routeId)
     prices = prices.decode("utf-8") 
     prices = ast.literal_eval(prices)

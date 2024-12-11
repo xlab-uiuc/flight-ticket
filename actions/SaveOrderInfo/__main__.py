@@ -2,6 +2,7 @@ import json
 import time
 import redis
 import ast
+from utils import utils
 
 class Seat:
     def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
@@ -62,11 +63,15 @@ class Order:
         self.price = _price
 
 def main(params):
+    config = utils.load_config()
+    REDIS_HOST = config.get("REDIS_HOST")
+    REDIS_PORT = config.get("REDIS_PORT")
+
     print(params)
     dictText_1 = params
     dictText_1 = dictText_1.get('order', {})
     orderResult = Order(dictText_1.get("id"),dictText_1.get("boughtDate"),dictText_1.get("travelDate"),dictText_1.get("travelTime"),dictText_1.get("accountId"),dictText_1.get("contactsName"),dictText_1.get("docType"),dictText_1.get("docNum"),dictText_1.get("planeNum"),dictText_1.get("coachNum"),dictText_1.get("seatClass"),dictText_1.get("seatNum"),dictText_1.get("stFrom"),dictText_1.get("stTo"),dictText_1.get("stat"),dictText_1.get("price"))
-    myclient = redis.Redis(host="host.minikube.internal",port="6379",db=1)
+    myclient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=1)
     print(params)
     print(orderResult.id)
     orderId = orderResult.id
