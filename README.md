@@ -39,12 +39,9 @@ minikube ip # add use this to edit mycluster.yaml
 vim deploy/kind/mycluster.yaml # edit apiHostName to be the x.x.x.x IP from last cmd e.g. apiHostName = 192.168.49.2
 ```
 
-Edit the values.yaml config file to allow more than 60 function invocations per minute:
+run deploy_wsk.sh to allow more than 60 function invocations per minute:
 ```
-vim helm/openwhisk/values.yaml
-set both of these to 1000:
-    actionsInvokesPerminute: 1000
-    actionsInvokesConcurrent: 1000
+./deploy_wsk.sh
 ```
 Now we are ready to deploy OpenWhisk
 ```
