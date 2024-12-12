@@ -25,12 +25,6 @@ sudo apt-get update
 sudo apt-get install helm
 ```
 
-Init helm and install Tiller to the K8 cluster
-```
-helm init
-kubectl create clusterrolebinding tiller-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
-```
-
 Install and Deploy OpenWhisk, grab the cluster's internal IP to add to the openwhisk deploy `mycluster.yaml` config file.
 ```
 git clone https://github.com/apache/openwhisk-deploy-kube.git
