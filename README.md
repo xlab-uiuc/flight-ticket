@@ -77,3 +77,15 @@ Run workflow with eventing:
 ```
 python3 run-all.py --minutes <workflow_duration>
 ```
+
+### Cleanup
+
+A useful command to delete the actions without having to recreate OpenWhisk:
+```
+wsk -i action list | awk '{print $1}' | grep -v '^actions$' | xargs -n 1 wsk -i action delete
+```
+
+Then you can redeploy with:
+```
+./deploy_ow_actions.sh
+```
