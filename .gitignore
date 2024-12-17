@@ -1,3 +1,7 @@
 virtualenv
 function.zip
 venv
+/clean
+/flight-ticket-data.zip
+/average_latency.txt
+/p99.txt
