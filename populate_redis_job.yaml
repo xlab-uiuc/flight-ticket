@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: populate-redis
+  namespace: openwhisk
+spec:
+  template:
+    spec:
+      containers:
+      - name: populate-redis
+        image: jacksonarthurclark/flight-ticket-populate-redis:latest
+        env:
+        - name: REDIS_HOST
+          value: "owdev-redis.openwhisk.svc.cluster.local"
+        - name: REDIS_PORT
+          value: "6379"
+        command: ["sh", "-c", "
+          wget -O clean.zip 'https://files.osf.io/v1/resources/6398x/providers/osfstorage/5ff8362686541a012814b8a4/?zip=' &&
+          unzip clean.zip -d clean &&
+          python add_distances.py &&
+          python add_station.py &&
+          python add_money.py &&
+          python add_orders.py &&
+          python add_trips.py &&
+          python add_planes.py &&
+          python add_priceroute.py &&
+          python add_sId.py &&
+          python add_sold_tickets.py &&
+          python add_entities.py"]
+      restartPolicy: Never
+  backoffLimit: 4
