@@ -14,7 +14,11 @@ def process_file(file_path, chunk_size=10000):
             ticket_data.append(chunk)
     return pd.concat(ticket_data, ignore_index=True)
 
-redis_client = redis.StrictRedis(host='localhost', port=6379, decode_responses=True, db=1)
+redis_host = os.getenv('REDIS_HOST', 'localhost')
+redis_port = int(os.getenv('REDIS_PORT', 6379))
+redis_db = int(os.getenv('REDIS_DB', 1))
+
+redis_client = redis.StrictRedis(host=redis_host, port=redis_port, decode_responses=True, db=redis_db)
 sold_tickets_key = "soldTickets"
 
 redis_client.delete(sold_tickets_key)

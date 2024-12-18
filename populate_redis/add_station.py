@@ -17,7 +17,11 @@ def process_file(file_path):
             pass
     return unique_stations
 
-redis_client = redis.StrictRedis(host='localhost', port=6379, decode_responses=True, db=1)
+redis_host = os.getenv('REDIS_HOST', 'localhost')
+redis_port = int(os.getenv('REDIS_PORT', 6379))
+redis_db = int(os.getenv('REDIS_DB', 1))
+
+redis_client = redis.StrictRedis(host=redis_host, port=redis_port, decode_responses=True, db=redis_db)
 station_key = "station"
 redis_client.delete(station_key)
 data_in = os.path.join(os.getcwd(), "clean/raw/")
