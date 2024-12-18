@@ -11,11 +11,15 @@ spec:
       - name: load-generator
         image: jacksonarthurclark/flight-ticket-load-generator:latest
         env:
+        - name: WSK_API_HOST
+          value: "https://192.168.49.2:31001"
+        - name: WSK_AUTH_KEY
+          value: "23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP"
         - name: REDIS_HOST
           value: "owdev-redis.openwhisk.svc.cluster.local"
         - name: REDIS_PORT
           value: "6379"
-        command: ["python", "/app/run-all.py"]
+        command: ["/app/entrypoint.sh", "python", "/app/run-all.py"]
         args:
         - "--minutes"
         - "5"
