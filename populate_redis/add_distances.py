@@ -14,7 +14,11 @@ def process_file(file_path, chunk_size=10000):
             routes_data.append(chunk)
     return pd.concat(routes_data, ignore_index=True)
 
-redis_client = redis.StrictRedis(host='localhost', port=6379, decode_responses=True, db=1)
+redis_host = os.getenv('REDIS_HOST', 'localhost')
+redis_port = int(os.getenv('REDIS_PORT', 6379))
+redis_db = int(os.getenv('REDIS_DB', 1))
+
+redis_client = redis.StrictRedis(host=redis_host, port=redis_port, decode_responses=True, db=redis_db)
 stations_key = "stations"
 distances_key = "distances"
 start_station_key = "startStation"
