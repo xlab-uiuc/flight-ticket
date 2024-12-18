@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load-generator
+  namespace: openwhisk
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+      - name: load-generator
+        image: jacksonarthurclark/flight-ticket-load-generator:latest
+        env:
+        - name: REDIS_HOST
+          value: "owdev-redis.openwhisk.svc.cluster.local"
+        - name: REDIS_PORT
+          value: "6379"
+        command: ["python", "/app/run-all.py"]
+        args:
+        - "--minutes"
+        - "5"
+      restartPolicy: Never

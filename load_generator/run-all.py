@@ -5,6 +5,7 @@ import argparse
 import random
 import ast
 import time
+import os
 from datetime import datetime, timedelta
 
 def EnforceActivityWindow(start_time, end_time, instance_events):
@@ -35,6 +36,7 @@ def write_average_latency_to_file(latencies, file_name="average_latency.txt"):
         f.write(f'Average latency: {avg_latency:.2f} ms\n')
 
 def time_invocation(command):
+    print('Running command:', command)
     start = time.time()
     try:
         subprocess.run(command, shell=True, check=True)
@@ -68,6 +70,7 @@ def invoke_query(client):
 
     # invoke query-for-travel
     invoke_query_cmd = f"wsk -i action invoke query-for-travel --param start \"{startSt}\" --param end \"{endSt}\" --param planeTypeId \"{random_plane}\" --param rId \"{random_route}\" --param seatClass \"{seat_class}\" --result --blocking"
+    print('invoking query for travel')
     return time_invocation(invoke_query_cmd)
 
 # running seat-service
@@ -93,6 +96,7 @@ def invoke_seat_service(client):
     seat_class = random.choice(["economyClass", "confortClass"])
 
     invoke_seat_service_cmd = f"wsk -i action invoke seat-service --param tripId \"{trip_id}\" --param date \"{travel_date}\" --param startStation \"{startSt}\" --param destStation \"{endSt}\" --param seatClass \"{seat_class}\" --result --blocking"
+    print('invoking seat service')
     return time_invocation(invoke_seat_service_cmd)
 
 # running cancel-service
@@ -104,9 +108,11 @@ def invoke_cancel_service(calls_count):
 
     if calls_count % 50 == 0 and calls_count != 0:
         reset_orders_to_active_status_cmd = "python3 populate_redis/reset_order_status.py"
+        print('resetted order status')
         subprocess.run(reset_orders_to_active_status_cmd, shell=True, check=True)
 
     invoke_cancel_service_cmd = f"wsk -i action invoke cancel-service --param orderId \"{order}\" --param loginId \"{loginId}\" --result --blocking"
+    print('Invoking cancel service')
     return time_invocation(invoke_cancel_service_cmd)
 
 
@@ -123,7 +129,11 @@ def main():
     calls_count = 0
     latencies = []
 
-    client = redis.Redis(host="localhost", port=6379, db=1)
+    redis_host = os.getenv('REDIS_HOST', 'localhost')
+    redis_port = int(os.getenv('REDIS_PORT', 6379))
+    redis_db = int(os.getenv('REDIS_DB', 1))
+
+    client = redis.Redis(host='owdev-redis.openwhisk.svc.cluster.local', port=6379, db=1)
 
     start_time = time.time()
     while time.time() - start_time < minutes:
