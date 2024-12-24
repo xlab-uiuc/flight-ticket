@@ -2,7 +2,7 @@ import redis
 import random
 import ast
 import time
-from utils import utils
+import os
 
 class Seat:
     def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
@@ -51,8 +51,8 @@ def fake_main(params):
 
 def main(params):
     config = utils.load_config()
-    REDIS_HOST = config.get("REDIS_HOST")
-    REDIS_PORT = config.get("REDIS_PORT")
+    REDIS_HOST = os.getenv("REDIS_HOST")
+    REDIS_PORT = os.getenv("REDIS_PORT")
 
     tripId = params["tripId"]
     myclient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=1)

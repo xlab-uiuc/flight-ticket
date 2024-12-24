@@ -3,7 +3,7 @@ import json
 import time
 from datetime import datetime
 import sys
-from utils import utils
+import os
 
 class Seat:
     def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
@@ -82,9 +82,8 @@ def calcReturn(_myOrder):
     return 0.8 * float(_myOrder.price)
 
 def main(params):
-    config = utils.load_config()
-    WSK_API_HOST = config.get("WSK_API_HOST")
-    WSK_AUTH_KEY = config.get("WSK_AUTH_KEY")
+    WSK_API_HOST = os.getenv("WSK_API_HOST")
+    WSK_AUTH_KEY = os.getenv("WSK_AUTH_KEY")
     
     user_pass = WSK_AUTH_KEY.split(':')
     base_url = WSK_API_HOST + '/api/v1/namespaces/guest/actions/'

@@ -2,7 +2,7 @@ import json
 import time
 import redis
 import requests
-from utils import utils
+import os
 
 class Seat:
     def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
@@ -84,10 +84,10 @@ def fake_main(params):
 
 def main(params):
     config = utils.load_config()
-    WSK_API_HOST = config.get("WSK_API_HOST")
-    WSK_AUTH_KEY = config.get("WSK_AUTH_KEY")
-    REDIS_HOST = config.get("REDIS_HOST")
-    REDIS_PORT = config.get("REDIS_PORT")
+    WSK_API_HOST = os.getenv("WSK_API_HOST")
+    WSK_AUTH_KEY = os.getenv("WSK_AUTH_KEY")
+    REDIS_HOST = os.getenv("REDIS_HOST")
+    REDIS_PORT = os.getenv("REDIS_PORT")
 
     user_pass = WSK_AUTH_KEY.split(':')
     authentication = (user_pass[0], user_pass[1])
