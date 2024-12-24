@@ -1,24 +1,25 @@
 #!/bin/bash
 
-# Check for required environment variables
 if [ -z "$WSK_API_HOST" ] || [ -z "$WSK_AUTH_KEY" ]; then
   echo "Error: WSK_API_HOST or WSK_AUTH_KEY not set."
   exit 1
 fi
 
-# Set OpenWhisk properties
 wsk property set --apihost "$WSK_API_HOST" --auth "$WSK_AUTH_KEY"
 
-# Deploy actions
 for dir in actions/*; do
   (
     cd "$dir" || continue
-    docker run --rm -v "$PWD:/tmp" openwhisk/python3action bash -c \
-      "cd /tmp && virtualenv virtualenv && source virtualenv/bin/activate && pip install -r requirements.txt"
-    zip -r function.zip ./* ../../utils/
+
+    python3 -m venv virtualenv
+    source virtualenv/bin/activate
+    pip install --no-cache-dir -r requirements.txt
+
+    zip -r function.zip ./*
+
+    deactivate
   )
 done
-
 
 wsk -i action create query-for-travel actions/QueryForTravel/function.zip --docker openwhisk/python3action --timeout 120000
 wsk -i action create seat-service actions/SeatService/function.zip --docker openwhisk/python3action --timeout 120000
