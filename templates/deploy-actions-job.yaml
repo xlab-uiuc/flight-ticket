@@ -17,6 +17,10 @@ spec:
           value: {{ .Values.global.openwhisk.apiHost }}
         - name: WSK_AUTH_KEY
           value: {{ .Values.global.openwhisk.authKey }}
+        - name: REDIS_HOST
+          value: {{ .Values.global.redis.host }}
+        - name: REDIS_PORT
+          value: {{ .Values.global.redis.port }}
         volumeMounts:
         - name: docker-sock
           mountPath: /var/run/docker.sock
