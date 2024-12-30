@@ -44,7 +44,6 @@ class Config:
 
 def main(params):
     startBig = time.time()
-    config = utils.load_config()
     WSK_API_HOST = os.getenv("WSK_API_HOST")
     WSK_AUTH_KEY = os.getenv("WSK_AUTH_KEY")
     user_pass = WSK_AUTH_KEY.split(':')

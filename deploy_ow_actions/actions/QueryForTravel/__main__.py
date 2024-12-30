@@ -60,7 +60,6 @@ class TravelResult:
 def main(params):
 
     returnResult = TravelResult(True, 100, 1, {"map":"map"})
-    config = utils.load_config()
     WSK_API_HOST = os.getenv("WSK_API_HOST")
     WSK_AUTH_KEY = os.getenv("WSK_AUTH_KEY")
     user_pass = WSK_AUTH_KEY.split(':')

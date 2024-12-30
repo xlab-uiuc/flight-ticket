@@ -44,7 +44,6 @@ class Config:
         self.descr = _descr
 
 def main(params):
-    config = utils.load_config()
     REDIS_HOST = os.getenv("REDIS_HOST")
     REDIS_PORT = os.getenv("REDIS_PORT")
 

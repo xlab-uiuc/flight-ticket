@@ -67,7 +67,6 @@ def main(params):
     money = float(params["money"])
     user = params["loginId"]
 
-    config = utils.load_config()
     REDIS_HOST = os.getenv("REDIS_HOST")
     REDIS_PORT = os.getenv("REDIS_PORT")
     myclient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=1)

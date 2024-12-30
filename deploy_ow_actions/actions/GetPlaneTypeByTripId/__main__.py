@@ -52,7 +52,6 @@ def fake_main(params):
     return {"Result":json.dumps(planeType.__dict__)}
 
 def main(params):
-    config = utils.load_config()
     REDIS_HOST = os.getenv("REDIS_HOST")
     REDIS_PORT = os.getenv("REDIS_PORT")
 

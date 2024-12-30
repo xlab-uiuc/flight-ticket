@@ -83,7 +83,6 @@ def fake_main(params):
     return {"Result":json.dumps(routeResult.__dict__)}
 
 def main(params):
-    config = utils.load_config()
     WSK_API_HOST = os.getenv("WSK_API_HOST")
     WSK_AUTH_KEY = os.getenv("WSK_AUTH_KEY")
     REDIS_HOST = os.getenv("REDIS_HOST")
