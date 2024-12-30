@@ -36,7 +36,6 @@ def write_average_latency_to_file(latencies, file_name="average_latency.txt"):
         f.write(f'Average latency: {avg_latency:.2f} ms\n')
 
 def time_invocation(command):
-    print('Running command:', command)
     start = time.time()
     try:
         subprocess.run(command, shell=True, check=True)
@@ -70,7 +69,6 @@ def invoke_query(client):
 
     # invoke query-for-travel
     invoke_query_cmd = f"wsk -i action invoke query-for-travel --param start \"{startSt}\" --param end \"{endSt}\" --param planeTypeId \"{random_plane}\" --param rId \"{random_route}\" --param seatClass \"{seat_class}\" --result --blocking"
-    print('invoking query for travel')
     return time_invocation(invoke_query_cmd)
 
 # running seat-service
@@ -81,7 +79,6 @@ def invoke_seat_service(client):
     keys = client.hkeys("stations")
     random_route = random.choice(keys).decode('utf-8')
 
-    print(random_route)
     route = stations.get(random_route)
     start_index = random.randint(0, len(route) - 2)
     end_index = random.randint(start_index + 1, len(route) - 1)
@@ -96,7 +93,6 @@ def invoke_seat_service(client):
     seat_class = random.choice(["economyClass", "confortClass"])
 
     invoke_seat_service_cmd = f"wsk -i action invoke seat-service --param tripId \"{trip_id}\" --param date \"{travel_date}\" --param startStation \"{startSt}\" --param destStation \"{endSt}\" --param seatClass \"{seat_class}\" --result --blocking"
-    print('invoking seat service')
     return time_invocation(invoke_seat_service_cmd)
 
 # running cancel-service
@@ -107,12 +103,10 @@ def invoke_cancel_service(calls_count):
     loginId = f"id_{random.randint(1,600)}"
 
     if calls_count % 50 == 0 and calls_count != 0:
-        reset_orders_to_active_status_cmd = "python3 populate_redis/reset_order_status.py"
-        print('resetted order status')
+        reset_orders_to_active_status_cmd = "python3 populate_redis/reset_order_status.py" # NOTE: This commmand seems problmeatic with our new structure
         subprocess.run(reset_orders_to_active_status_cmd, shell=True, check=True)
 
     invoke_cancel_service_cmd = f"wsk -i action invoke cancel-service --param orderId \"{order}\" --param loginId \"{loginId}\" --result --blocking"
-    print('Invoking cancel service')
     return time_invocation(invoke_cancel_service_cmd)
 
 
@@ -149,8 +143,6 @@ def main():
             for inter_arrival in instance_events:
                 if time.time() - start_time > minutes:
                     break
-
-                print(inter_arrival)
                 
                 latencies.append(invoke_cancel_service(calls_count))
                 latencies.append(invoke_query(client))
