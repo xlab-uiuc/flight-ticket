@@ -45,7 +45,7 @@ class Config:
 
 def main(params):
     REDIS_HOST = params.get("REDIS_HOST")
-    REDIS_PORT = params.get("REDIS_PORT")
+    REDIS_PORT = int(params.get("REDIS_PORT"))
 
     stationName = params["stationName"]
     myclient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=1)

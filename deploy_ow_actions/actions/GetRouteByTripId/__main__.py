@@ -86,7 +86,7 @@ def main(params):
     WSK_API_HOST = params.get("WSK_API_HOST")
     WSK_AUTH_KEY = params.get("WSK_AUTH_KEY")
     REDIS_HOST = params.get("REDIS_HOST")
-    REDIS_PORT = params.get("REDIS_PORT")
+    REDIS_PORT = int(params.get("REDIS_PORT"))
 
     user_pass = WSK_AUTH_KEY.split(':')
     authentication = (user_pass[0], user_pass[1])

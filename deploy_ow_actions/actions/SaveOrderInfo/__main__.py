@@ -64,7 +64,7 @@ class Order:
 
 def main(params):
     REDIS_HOST = params.get("REDIS_HOST")
-    REDIS_PORT = params.get("REDIS_PORT")
+    REDIS_PORT = int(params.get("REDIS_PORT"))
 
     print(params)
     dictText_1 = params

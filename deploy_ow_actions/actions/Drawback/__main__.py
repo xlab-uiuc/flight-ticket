@@ -68,7 +68,7 @@ def main(params):
     user = params["loginId"]
 
     REDIS_HOST = params.get("REDIS_HOST")
-    REDIS_PORT = params.get("REDIS_PORT")
+    REDIS_PORT = int(params.get("REDIS_PORT"))
     myclient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=1)
     
     oldValue = myclient.hget("money", user)

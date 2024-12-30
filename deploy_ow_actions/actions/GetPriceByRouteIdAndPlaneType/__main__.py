@@ -45,7 +45,7 @@ class Config:
 
 def main(params):
     REDIS_HOST = params.get("REDIS_HOST")
-    REDIS_PORT = params.get("REDIS_PORT")
+    REDIS_PORT = int(params.get("REDIS_PORT"))
 
     routeId = params["rId"]
     planeType = params["planeType"]
