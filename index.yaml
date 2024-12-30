@@ -3,11 +3,11 @@ entries:
   flight-ticket:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2024-12-30T15:41:30.433398556-06:00"
+    created: "2024-12-30T16:44:49.684879725-06:00"
     description: Deploys flight-ticket
     digest: 911107fcf2a74811764e858101dbf767f70d116cdf74509388e3301644a6b32c
     name: flight-ticket
     urls:
     - https://xlab-uiuc.github.io/flight-ticket/flight-ticket-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-30T15:41:30.427715569-06:00"
+generated: "2024-12-30T16:44:49.681557159-06:00"
