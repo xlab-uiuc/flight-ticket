@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load-generator
+  namespace: openwhisk
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      initContainers:
+      - name: wait-for-populate-redis
+        image: bitnami/kubectl:latest
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for populate-redis to complete..."
+          until kubectl get job populate-redis -n openwhisk -o jsonpath='{.status.succeeded}' | grep -q 1; do
+            sleep 5
+          done
+      containers:
+      - name: load-generator
+        image: {{ .Values.jobs.loadGenerator.image }}
+        command: ["/app/entrypoint.sh", "python", "/app/run-all.py"]
+        args:
+        - "--minutes"
+        - "5"
+        env:
+        - name: WSK_API_HOST
+          value: {{ .Values.global.openwhisk.apiHost }}
+        - name: WSK_AUTH_KEY
+          value: {{ .Values.global.openwhisk.authKey }}
+        - name: REDIS_HOST
+          value: {{ .Values.global.redis.host }}
+        - name: REDIS_PORT
+          value: "{{ .Values.global.redis.port }}"
+        - name: REDIS_DB
+          value: "{{ .Values.global.redis.db }}"
+      restartPolicy: Never

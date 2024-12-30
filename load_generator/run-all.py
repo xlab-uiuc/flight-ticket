@@ -36,7 +36,6 @@ def write_average_latency_to_file(latencies, file_name="average_latency.txt"):
         f.write(f'Average latency: {avg_latency:.2f} ms\n')
 
 def time_invocation(command):
-    print('Running command:', command)
     start = time.time()
     try:
         subprocess.run(command, shell=True, check=True)
@@ -70,7 +69,6 @@ def invoke_query(client):
 
     # invoke query-for-travel
     invoke_query_cmd = f"wsk -i action invoke query-for-travel --param start \"{startSt}\" --param end \"{endSt}\" --param planeTypeId \"{random_plane}\" --param rId \"{random_route}\" --param seatClass \"{seat_class}\" --result --blocking"
-    print('invoking query for travel')
     return time_invocation(invoke_query_cmd)
 
 # running seat-service
@@ -81,7 +79,6 @@ def invoke_seat_service(client):
     keys = client.hkeys("stations")
     random_route = random.choice(keys).decode('utf-8')
 
-    print(random_route)
     route = stations.get(random_route)
     start_index = random.randint(0, len(route) - 2)
     end_index = random.randint(start_index + 1, len(route) - 1)
@@ -96,23 +93,23 @@ def invoke_seat_service(client):
     seat_class = random.choice(["economyClass", "confortClass"])
 
     invoke_seat_service_cmd = f"wsk -i action invoke seat-service --param tripId \"{trip_id}\" --param date \"{travel_date}\" --param startStation \"{startSt}\" --param destStation \"{endSt}\" --param seatClass \"{seat_class}\" --result --blocking"
-    print('invoking seat service')
     return time_invocation(invoke_seat_service_cmd)
 
 # running cancel-service
 # after running this we must change back the 'stat' of the orders
 # wsk -i action invoke cancel-service --param orderId "ord-200" --param loginId "id_444" --blocking --result
-def invoke_cancel_service(calls_count):
+def invoke_cancel_service(calls_count, client):
     order = f"ord-{random.randint(1,200)}"
     loginId = f"id_{random.randint(1,600)}"
 
     if calls_count % 50 == 0 and calls_count != 0:
-        reset_orders_to_active_status_cmd = "python3 populate_redis/reset_order_status.py"
-        print('resetted order status')
-        subprocess.run(reset_orders_to_active_status_cmd, shell=True, check=True)
+        client.delete("stat")
+
+        for order_id in range(1, 201):
+            stat = random.randint(0,2)
+            client.hset("stat", f"ord-{order_id}", stat)
 
     invoke_cancel_service_cmd = f"wsk -i action invoke cancel-service --param orderId \"{order}\" --param loginId \"{loginId}\" --result --blocking"
-    print('Invoking cancel service')
     return time_invocation(invoke_cancel_service_cmd)
 
 
@@ -129,11 +126,11 @@ def main():
     calls_count = 0
     latencies = []
 
-    redis_host = os.getenv('REDIS_HOST', 'localhost')
-    redis_port = int(os.getenv('REDIS_PORT', 6379))
-    redis_db = int(os.getenv('REDIS_DB', 1))
+    REDIS_HOST = os.getenv('REDIS_HOST', 'owdev-redis.openwhisk.svc.cluster.local')
+    REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
+    REDIS_DB = int(os.getenv('REDIS_DB', 1))
 
-    client = redis.Redis(host='owdev-redis.openwhisk.svc.cluster.local', port=6379, db=1)
+    client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
 
     start_time = time.time()
     while time.time() - start_time < minutes:
@@ -149,10 +146,8 @@ def main():
             for inter_arrival in instance_events:
                 if time.time() - start_time > minutes:
                     break
-
-                print(inter_arrival)
                 
-                latencies.append(invoke_cancel_service(calls_count))
+                latencies.append(invoke_cancel_service(calls_count, client))
                 latencies.append(invoke_query(client))
                 latencies.append(invoke_seat_service(client))
                 

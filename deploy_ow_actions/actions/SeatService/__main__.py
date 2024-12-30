@@ -1,7 +1,7 @@
 import requests
 import json
 import time
-from utils import utils
+import os
 
 class Seat:
     def __init__(self, _travelDate, _planeNumber, _startStation, _destStation, _seatType):
@@ -44,9 +44,8 @@ class Config:
 
 def main(params):
     startBig = time.time()
-    config = utils.load_config()
-    WSK_API_HOST = config.get("WSK_API_HOST")
-    WSK_AUTH_KEY = config.get("WSK_AUTH_KEY")
+    WSK_API_HOST = params.get("WSK_API_HOST")
+    WSK_AUTH_KEY = params.get("WSK_AUTH_KEY")
     user_pass = WSK_AUTH_KEY.split(':')
     base_url = WSK_API_HOST + '/api/v1/namespaces/guest/actions/'
     url_func_9 = base_url + "get-route-by-trip-id"

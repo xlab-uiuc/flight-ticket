@@ -6,14 +6,28 @@ metadata:
 spec:
   template:
     spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      initContainers:
+      - name: wait-for-deploy-actions
+        image: bitnami/kubectl:latest
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for deploy-actions to complete..."
+          until kubectl get job deploy-actions -n openwhisk -o jsonpath='{.status.succeeded}' | grep -q 1; do
+            sleep 5
+          done
       containers:
       - name: populate-redis
-        image: jacksonarthurclark/flight-ticket-populate-redis:latest
+        image: {{ .Values.jobs.populateRedis.image }}
         env:
         - name: REDIS_HOST
-          value: "owdev-redis.openwhisk.svc.cluster.local"
+          value: {{ .Values.global.redis.host }}
         - name: REDIS_PORT
-          value: "6379"
+          value: "{{ .Values.global.redis.port }}"
+        - name: REDIS_DB
+          value: "{{ .Values.global.redis.db }}"
         command: ["sh", "-c", "
           wget -O clean.zip 'https://files.osf.io/v1/resources/6398x/providers/osfstorage/5ff8362686541a012814b8a4/?zip=' &&
           unzip clean.zip -d clean &&

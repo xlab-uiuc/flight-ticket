@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: deploy-actions
+  namespace: openwhisk
+spec:
+  template:
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+      - name: deploy-actions
+        image: {{ .Values.jobs.deployActions.image }}
+        securityContext:
+          privileged: true
+        env:
+        - name: WSK_API_HOST
+          value: {{ .Values.global.openwhisk.apiHost }}
+        - name: WSK_AUTH_KEY
+          value: {{ .Values.global.openwhisk.authKey }}
+        - name: REDIS_HOST
+          value: {{ .Values.global.redis.host }}
+        - name: REDIS_PORT
+          value: "{{ .Values.global.redis.port }}"
+        - name: REDIS_DB
+          value: "{{ .Values.global.redis.db }}"
+        volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+        command: ["/bin/bash", "-c"]
+        args:
+        - |
+          wsk property set --apihost "$WSK_API_HOST" --auth "$WSK_AUTH_KEY" && \
+          /app/deploy_ow_actions.sh
+      volumes:
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+      restartPolicy: Never
+  backoffLimit: 4

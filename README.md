@@ -6,14 +6,10 @@ Different from AirplaneTicket, FlightTicket is implemented in Python and runs as
 
 One key feature of FlightTicket is that, instead of using a synthetic input generator, FlightTicket uses the [US-airlines dataset](https://osf.io/6398x/) from the US Department of transport.
 
-FlightTicket is created by [Jovan Stojkovic](https://jovans2.github.io) and is maintained by [Alan Andrade](https://github.com/Alan-S-Andrade). 
-
 ## Use the FlightTicket benchmark
 
-Deploy a minikube cluster
-```
-minikube start --cpus=8
-```
+### Prerequisites
+- A kubernetes cluster (could also be minikube) with helm installed
 
 ### Deploy OpenWhisk
 Install and initialize helm for deploying openwhisk, follow the [Helm tutorial](https://helm.sh/docs/intro/install/)
@@ -22,70 +18,52 @@ Install and Deploy OpenWhisk, grab the cluster's internal IP to add to the openw
 ```
 git clone https://github.com/apache/openwhisk-deploy-kube.git
 cd openwhisk-deploy-kube
-minikube ip # add use this to edit mycluster.yaml
-vim deploy/kind/mycluster.yaml # edit apiHostName to be the x.x.x.x IP from last cmd e.g. apiHostName = 192.168.49.2
 ```
 
-run deploy_wsk.sh to allow more than 60 function invocations per minute:
+Get the hostname using `hostname -I` or `minikube ip` if using minikube. Then, edit `deploy/kind/mycluster.yaml` so that `apiHostName` is the proper IP.
+
+run `deploy_wsk.sh` in flight-ticket to allow more than 60 function invocations per minute:
 ```
 ./deploy_wsk.sh
 ```
-Now we are ready to deploy OpenWhisk
+Now we are ready to deploy OpenWhisk, `cd` back into `openwhisk-deploy-kube` and run the following:
 ```
-helm install owdev ./helm/openwhisk -n openwhisk --create-namespace -f ./deploy/kind/mycluster.yaml # we use this mycluster.yaml as it has single-node config
+helm install owdev ./helm/openwhisk -n openwhisk --create-namespace -f ./deploy/kind/mycluster.yaml
 ```
 
-Watch OpenWhisk deployment, wait for **owdev-install-packages** to be **Completed** meaning OW was deployed successfully. Should take around 10 min.
+Watch OpenWhisk deployment, wait for **owdev-install-packages** to be **Completed** meaning OW was deployed successfully.
 ```
 kubectl get pods -n openwhisk --watch
 ```
 
-Run these commands to use the wsk CLI on your openwhisk namespace
+### Deploying flight-ticket
+Now, all that's left is to helm install flight-ticket!
 ```
-wget https://github.com/apache/openwhisk-cli/releases/download/1.2.0/OpenWhisk_CLI-1.2.0-linux-amd64.tgz
-tar -zxvf OpenWhisk_CLI-1.2.0-linux-amd64.tgz
-chmod +x wsk
-sudo mv wsk /usr/bin/
-wsk property set --apihost <whisk.ingress.apiHostName>:<whisk.ingress.apiHostPort>
-wsk property set --auth 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
+helm install flight-ticket ./flight-ticket --namespace openwhisk # or any namespace name where openwhisk is installed
 ```
 
-Edit ow.config with the openwhisk API HOST and AUTH KEY, as well as your Redis HOST and PORT.
+flight-ticket is ready when the load generator starts running.
 
-### Deploy FlightTicket
+## Developing
+We have three kubernetes jobs that handle setup and running the load generator:
+- `templates/deploy-actions-job.yaml` builds and deploys the OpenWhisk actions
+- `templates/populate-redis-job.yaml` downloads the dataset and populated redis
+- `templates/load-generator-job.yaml` runs the load generator
 
-Unzip it under the root folder:
+There are also a couple of helper jobs that create a service account so that deploy-actions has the permissions it needs for the deployment.
 
-```shell
-unzip clean.zip -d clean
+Each of these jobs is a docker image and has it's own directory, `deploy_ow_actions`, `populate_redis`, and `load_generator`. You can rebuild the docker images
+using these commands:
+```
+docker build -t jacksonarthurclark/flight-ticket-load-generator:latest .
+docker push jacksonarthurclark/flight-ticket-load-generator:latest
 ```
 
-Download flight ticket data from OSF:
-https://files.osf.io/v1/resources/6398x/providers/osfstorage/5ff8362686541a012814b8a4/?zip=
+Just be sure to update to a dockerhub that you have permissions on, and to update the images used in the helm chart.
 
-Next, build and push docker images, deploy functions as OpenWhisk actions then create sequence (workflow).
-Also, we need to deploy Redis and populate it with AirplaneTicket data (only to be done once):
-```
-sudo apt update
-sudo apt install redis-server
-sudo service redis-server start
-pip install redis
-./deploy_ow_actions.sh
-```
-
-Run workflow with eventing:
-```
-python3 run-all.py --minutes <workflow_duration>
-```
-
-### Cleanup
+### Misc
 
 A useful command to delete the actions without having to recreate OpenWhisk:
 ```
 wsk -i action list | awk '{print $1}' | grep -v '^actions$' | xargs -n 1 wsk -i action delete
-```
-
-Then you can redeploy with:
-```
-./deploy_ow_actions.sh
 ```
