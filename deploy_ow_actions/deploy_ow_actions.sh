@@ -5,8 +5,8 @@ if [ -z "$WSK_API_HOST" ] || [ -z "$WSK_AUTH_KEY" ]; then
   exit 1
 fi
 
-if [ -z "$REDIS_HSOST" ] || [ -z "$REDIS_PORT" ]; then
-  echo "Error. REDIS_HOST or REDIST_PORT not set."
+if [ -z "$REDIS_HOST" ] || [ -z "$REDIS_PORT" ]; then
+  echo "Error. REDIS_HOST or REDIS_PORT not set."
   exit 1
 fi
 
