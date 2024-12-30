@@ -71,3 +71,48 @@ docker push jacksonarthurclark/flight-ticket-load-generator:latest
 ```
 
 Just be sure to update to a dockerhub that you have permissions on, and to update the images used in the helm chart.
+
+### Updating the Helm Chart
+
+If you make changes to the FlightTicket benchmark or its associated jobs, update and publish the Helm chart to reflect those changes. Follow these steps:
+
+1. **Package the Helm Chart**  
+   Create a `.tgz` package of the Helm chart:
+   ```
+   helm package ./flight-ticket
+   ```
+
+2. **Switch to the `gh-pages` Branch**  
+   Publish the Helm chart by adding it to the `gh-pages` branch of your repository:
+   ```
+   git checkout gh-pages
+   ```
+
+3. **Copy the `.tgz` Package to the `gh-pages` Branch**  
+   Move or copy the Helm chart package to the `gh-pages` branch:
+   ```
+   mv ../flight-ticket-<version>.tgz .
+   ```
+
+4. **Generate the `index.yaml` File**  
+   Use the Helm CLI to generate or update the `index.yaml` file for the repository:
+   ```
+   helm repo index . --url https://<your-org>.github.io/flight-ticket
+   ```
+   Replace `<your-org>` with your GitHub organization or username.
+
+5. **Commit and Push the Changes**  
+   Commit the `.tgz` file and the updated `index.yaml` file:
+   ```
+   git add .
+   git commit -m "Update Helm chart for FlightTicket"
+   git push origin gh-pages
+   ```
+
+6. **Helm Installation Using Published Chart**  
+   After publishing, users can install FlightTicket directly from the Helm repository:
+   ```
+   helm repo add flight-ticket https://<your-org>.github.io/flight-ticket
+   helm repo update
+   helm install flight-ticket flight-ticket/flight-ticket --namespace openwhisk
+   ```
