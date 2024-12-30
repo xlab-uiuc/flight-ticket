@@ -12,6 +12,8 @@ fi
 
 wsk property set --apihost "$WSK_API_HOST" --auth "$WSK_AUTH_KEY"
 
+wsk -i action list | awk '{print $1}' | grep -v '^actions$' | xargs -n 1 wsk -i action delete
+
 for dir in actions/*; do
   (
     cd "$dir" || continue
