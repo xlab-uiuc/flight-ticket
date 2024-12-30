@@ -10,15 +10,24 @@ spec:
       containers:
       - name: deploy-actions
         image: {{ .Values.jobs.deployActions.image }}
+        securityContext:
+          privileged: true
         env:
         - name: WSK_API_HOST
           value: {{ .Values.global.openwhisk.apiHost }}
         - name: WSK_AUTH_KEY
           value: {{ .Values.global.openwhisk.authKey }}
+        volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
         command: ["/bin/bash", "-c"]
         args:
         - |
           wsk property set --apihost "$WSK_API_HOST" --auth "$WSK_AUTH_KEY" && \
           /app/deploy_ow_actions.sh
+      volumes:
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
       restartPolicy: Never
   backoffLimit: 4
