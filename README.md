@@ -60,10 +60,3 @@ docker push jacksonarthurclark/flight-ticket-load-generator:latest
 ```
 
 Just be sure to update to a dockerhub that you have permissions on, and to update the images used in the helm chart.
-
-### Misc
-
-A useful command to delete the actions without having to recreate OpenWhisk:
-```
-wsk -i action list | awk '{print $1}' | grep -v '^actions$' | xargs -n 1 wsk -i action delete
-```
