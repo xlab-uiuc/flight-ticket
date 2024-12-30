@@ -43,7 +43,9 @@ wsk -i action create get-plane-type-by-trip-id actions/GetPlaneTypeByTripId/func
   --param REDIS_PORT "$REDIS_PORT"
 wsk -i action create get-plane-type-by-plane-type-id actions/GetPlaneTypeByPlaneTypeId/function.zip --docker openwhisk/python3action --timeout 120000 \
   --param WSK_API_HOST "$WSK_API_HOST" \
-  --param WSK_AUTH_KEY "$WSK_AUTH_KEY"
+  --param WSK_AUTH_KEY "$WSK_AUTH_KEY" \
+  --param REDIS_HOST "$REDIS_HOST" \
+  --param REDIS_PORT "$REDIS_PORT"
 wsk -i action create get-sold-tickets actions/GetSoldTickets/function.zip --docker openwhisk/python3action --timeout 120000 \
   --param WSK_API_HOST "$WSK_API_HOST" \
   --param WSK_AUTH_KEY "$WSK_AUTH_KEY"
