@@ -97,9 +97,8 @@ If you make changes to the FlightTicket benchmark or its associated jobs, update
 4. **Generate the `index.yaml` File**  
    Use the Helm CLI to generate or update the `index.yaml` file for the repository:
    ```
-   helm repo index . --url https://<your-org>.github.io/flight-ticket
+   helm repo index . --url https://xlab-uiuc.github.io/flight-ticket
    ```
-   Replace `<your-org>` with your GitHub organization or username.
 
 5. **Commit and Push the Changes**  
    Commit the `.tgz` file and the updated `index.yaml` file:
@@ -112,7 +111,7 @@ If you make changes to the FlightTicket benchmark or its associated jobs, update
 6. **Helm Installation Using Published Chart**  
    After publishing, users can install FlightTicket directly from the Helm repository:
    ```
-   helm repo add flight-ticket https://<your-org>.github.io/flight-ticket
+   helm repo add flight-ticket https://xlab-uiuc.github.io/flight-ticket/
    helm repo update
    helm install flight-ticket flight-ticket/flight-ticket --namespace openwhisk
    ```
