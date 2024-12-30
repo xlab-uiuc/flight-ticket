@@ -63,8 +63,8 @@ class Order:
         self.price = _price
 
 def main(params):
-    REDIS_HOST = os.getenv("REDIS_HOST")
-    REDIS_PORT = os.getenv("REDIS_PORT")
+    REDIS_HOST = params.get("REDIS_HOST")
+    REDIS_PORT = params.get("REDIS_PORT")
 
     print(params)
     dictText_1 = params

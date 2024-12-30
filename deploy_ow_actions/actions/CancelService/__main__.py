@@ -82,8 +82,8 @@ def calcReturn(_myOrder):
     return 0.8 * float(_myOrder.price)
 
 def main(params):
-    WSK_API_HOST = os.getenv("WSK_API_HOST")
-    WSK_AUTH_KEY = os.getenv("WSK_AUTH_KEY")
+    WSK_API_HOST = params.get("WSK_API_HOST")
+    WSK_AUTH_KEY = params.get("WSK_AUTH_KEY")
     
     user_pass = WSK_AUTH_KEY.split(':')
     base_url = WSK_API_HOST + '/api/v1/namespaces/guest/actions/'

@@ -83,10 +83,10 @@ def fake_main(params):
     return {"Result":json.dumps(routeResult.__dict__)}
 
 def main(params):
-    WSK_API_HOST = os.getenv("WSK_API_HOST")
-    WSK_AUTH_KEY = os.getenv("WSK_AUTH_KEY")
-    REDIS_HOST = os.getenv("REDIS_HOST")
-    REDIS_PORT = os.getenv("REDIS_PORT")
+    WSK_API_HOST = params.get("WSK_API_HOST")
+    WSK_AUTH_KEY = params.get("WSK_AUTH_KEY")
+    REDIS_HOST = params.get("REDIS_HOST")
+    REDIS_PORT = params.get("REDIS_PORT")
 
     user_pass = WSK_AUTH_KEY.split(':')
     authentication = (user_pass[0], user_pass[1])

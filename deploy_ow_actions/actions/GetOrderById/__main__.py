@@ -63,8 +63,8 @@ class Order:
         self.price = _price
 
 def main(params):
-    REDIS_HOST = os.getenv("REDIS_HOST")
-    REDIS_PORT = os.getenv("REDIS_PORT")
+    REDIS_HOST = params.get("REDIS_HOST")
+    REDIS_PORT = params.get("REDIS_PORT")
 
     orderId = params["orderId"]
     myclient = redis.Redis(host=REDIS_HOST,port=REDIS_PORT,db=1)

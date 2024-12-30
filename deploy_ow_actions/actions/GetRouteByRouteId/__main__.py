@@ -44,8 +44,8 @@ class Config:
         self.descr = _descr
 
 def main(params):
-    REDIS_HOST = os.getenv("REDIS_HOST")
-    REDIS_PORT = os.getenv("REDIS_PORT")
+    REDIS_HOST = params.get("REDIS_HOST")
+    REDIS_PORT = params.get("REDIS_PORT")
 
     routeId = params["rId"]
     myclient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT,db=1)
