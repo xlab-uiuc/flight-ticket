@@ -2,8 +2,9 @@ global:
   redis:
     host: "owdev-redis.openwhisk.svc.cluster.local"
     port: 6379
+    db: 1
   openwhisk:
-    apiHost: "https://155.98.36.82:31001"
+    apiHost: "https://130.126.139.72:31001"
     authKey: "23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP"
 
 jobs:
