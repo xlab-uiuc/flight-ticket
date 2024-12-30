@@ -119,45 +119,61 @@ def main():
     load_desc = ["LOW_LOAD", "MED_LOAD", "HIGH_LOAD"]
     np.random.seed(100)
 
-    parser = argparse.ArgumentParser(description='Process args')
-    parser.add_argument('--minutes', type=str, help='Duration in minutes to run the workflow')
+    parser = argparse.ArgumentParser(description="Process args")
+    parser.add_argument(
+        "--minutes", type=str, help="Duration in minutes to run the workflow. If omitted, the generator runs indefinitely."
+    )
     args = parser.parse_args()
-    minutes = 60 * int(args.minutes)
+
+    # Determine whether to run indefinitely
+    minutes = 60 * int(args.minutes) if args.minutes else None
     calls_count = 0
     latencies = []
 
-    REDIS_HOST = os.getenv('REDIS_HOST', 'owdev-redis.openwhisk.svc.cluster.local')
-    REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
-    REDIS_DB = int(os.getenv('REDIS_DB', 1))
+    REDIS_HOST = os.getenv("REDIS_HOST", "owdev-redis.openwhisk.svc.cluster.local")
+    REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+    REDIS_DB = int(os.getenv("REDIS_DB", 1))
 
     client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
 
     start_time = time.time()
-    while time.time() - start_time < minutes:
-        for load in loads:
-            # generate Poisson's distribution of events 
-            seed = 101
-            np.random.seed(seed)
-            rate = load / 60
-            inter_arrivals = list(np.random.exponential(scale=1.0 / rate, size=int(2 * minutes * rate)))
-            instance_events = EnforceActivityWindow(0, minutes, inter_arrivals)
+    print("Starting workload generator...")
+    try:
+        while True:
+            # Check if we are running for a fixed duration
+            if minutes and time.time() - start_time >= minutes:
+                break
 
-            start_time = time.time()
-            for inter_arrival in instance_events:
-                if time.time() - start_time > minutes:
-                    break
-                
-                latencies.append(invoke_cancel_service(calls_count, client))
-                latencies.append(invoke_query(client))
-                latencies.append(invoke_seat_service(client))
-                
-                calls_count += 1
+            for load in loads:
+                # Generate Poisson's distribution of events
+                seed = 101
+                np.random.seed(seed)
+                rate = load / 60
+                inter_arrivals = list(np.random.exponential(scale=1.0 / rate, size=100))  # Batch size for efficiency
+                instance_events = inter_arrivals
 
-                # wait for the next event (inter-arrival time)
-                time.sleep(inter_arrival)
-                
-    write_p99_to_file(latencies)
-    write_average_latency_to_file(latencies)
+                for inter_arrival in instance_events:
+                    # Check for the fixed duration condition
+                    if minutes and time.time() - start_time >= minutes:
+                        break
+
+                    # Execute workload
+                    latencies.append(invoke_cancel_service(calls_count, client))
+                    latencies.append(invoke_query(client))
+                    latencies.append(invoke_seat_service(client))
+
+                    calls_count += 1
+
+                    # Wait for the next event
+                    time.sleep(inter_arrival)
+
+    except KeyboardInterrupt:
+        print("Stopping workload generator...")
+
+    finally:
+        # Save metrics on exit
+        write_p99_to_file(latencies)
+        write_average_latency_to_file(latencies)
 
 if __name__ == "__main__":
     main()

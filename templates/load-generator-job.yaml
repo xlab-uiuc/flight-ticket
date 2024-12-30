@@ -23,9 +23,6 @@ spec:
       - name: load-generator
         image: {{ .Values.jobs.loadGenerator.image }}
         command: ["/app/entrypoint.sh", "python", "/app/run-all.py"]
-        args:
-        - "--minutes"
-        - "5"
         env:
         - name: WSK_API_HOST
           value: {{ .Values.global.openwhisk.apiHost }}
