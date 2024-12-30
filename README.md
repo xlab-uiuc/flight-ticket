@@ -12,6 +12,17 @@ One key feature of FlightTicket is that, instead of using a synthetic input gene
 - A kubernetes cluster (could also be minikube) with helm installed
 
 ### Deploy OpenWhisk
+#### Install OpenEBS
+
+OpenEBS is a prerequisite for deploying OpenWhisk. If OpenEBS is not already installed, you can install it using Helm.
+Run the following commands to install OpenEBS and set the default storage class:
+```
+helm repo add openebs https://openebs.github.io/charts
+helm repo update
+helm install openebs openebs/openebs --namespace openebs --create-namespace
+kubectl patch storageclass openebs-hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
+
 Install and initialize helm for deploying openwhisk, follow the [Helm tutorial](https://helm.sh/docs/intro/install/)
 
 Install and Deploy OpenWhisk, grab the cluster's internal IP to add to the openwhisk deploy `mycluster.yaml` config file.
