@@ -98,13 +98,17 @@ def invoke_seat_service(client):
 # running cancel-service
 # after running this we must change back the 'stat' of the orders
 # wsk -i action invoke cancel-service --param orderId "ord-200" --param loginId "id_444" --blocking --result
-def invoke_cancel_service(calls_count):
+def invoke_cancel_service(calls_count, client):
     order = f"ord-{random.randint(1,200)}"
     loginId = f"id_{random.randint(1,600)}"
 
     if calls_count % 50 == 0 and calls_count != 0:
-        reset_orders_to_active_status_cmd = "python3 populate_redis/reset_order_status.py" # NOTE: This commmand seems problmeatic with our new structure
-        subprocess.run(reset_orders_to_active_status_cmd, shell=True, check=True)
+        client.delete("stat")
+
+        for order_id in range(1, 201):
+            stat = random.randint(0,2)
+            client.hset("stat", f"ord-{order_id}", stat)
+
 
     invoke_cancel_service_cmd = f"wsk -i action invoke cancel-service --param orderId \"{order}\" --param loginId \"{loginId}\" --result --blocking"
     return time_invocation(invoke_cancel_service_cmd)
@@ -144,7 +148,7 @@ def main():
                 if time.time() - start_time > minutes:
                     break
                 
-                latencies.append(invoke_cancel_service(calls_count))
+                latencies.append(invoke_cancel_service(calls_count, client))
                 latencies.append(invoke_query(client))
                 latencies.append(invoke_seat_service(client))
                 
