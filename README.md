@@ -47,7 +47,7 @@ flight-ticket is ready when the load generator starts running.
 ## Developing
 We have three kubernetes jobs that handle setup and running the load generator:
 - `templates/deploy-actions-job.yaml` builds and deploys the OpenWhisk actions
-- `templates/populate-redis-job.yaml` downloads the dataset and populated redis
+- `templates/populate-redis-job.yaml` downloads the dataset and populates redis
 - `templates/load-generator-job.yaml` runs the load generator
 
 There are also a couple of helper jobs that create a service account so that deploy-actions has the permissions it needs for the deployment.
