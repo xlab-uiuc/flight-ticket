@@ -109,7 +109,6 @@ def invoke_cancel_service(calls_count, client):
             stat = random.randint(0,2)
             client.hset("stat", f"ord-{order_id}", stat)
 
-
     invoke_cancel_service_cmd = f"wsk -i action invoke cancel-service --param orderId \"{order}\" --param loginId \"{loginId}\" --result --blocking"
     return time_invocation(invoke_cancel_service_cmd)
 
@@ -127,11 +126,11 @@ def main():
     calls_count = 0
     latencies = []
 
-    redis_host = os.getenv('REDIS_HOST', 'localhost')
-    redis_port = int(os.getenv('REDIS_PORT', 6379))
-    redis_db = int(os.getenv('REDIS_DB', 1))
+    REDIS_HOST = os.getenv('REDIS_HOST', 'owdev-redis.openwhisk.svc.cluster.local')
+    REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
+    REDIS_DB = int(os.getenv('REDIS_DB', 1))
 
-    client = redis.Redis(host='owdev-redis.openwhisk.svc.cluster.local', port=6379, db=1)
+    client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
 
     start_time = time.time()
     while time.time() - start_time < minutes:
