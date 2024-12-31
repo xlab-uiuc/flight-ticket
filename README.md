@@ -48,6 +48,8 @@ kubectl get pods -n openwhisk --watch
 ```
 
 ### Deploying flight-ticket
+Update `values.yaml` so that the apiHost matches `hostname -I` and the value in `mycluster.yaml`.
+
 Now, all that's left is to helm install flight-ticket!
 ```
 helm install flight-ticket ./flight-ticket --namespace openwhisk # or any namespace name where openwhisk is installed
