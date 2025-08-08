@@ -10,6 +10,7 @@ spec:
       containers:
       - name: deploy-actions
         image: {{ .Values.jobs.deployActions.image }}
+        imagePullPolicy: {{.Values.global.imagePullPolicy}}
         securityContext:
           privileged: true
         env:
