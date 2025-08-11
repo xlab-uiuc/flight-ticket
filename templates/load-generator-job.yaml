@@ -22,6 +22,7 @@ spec:
       containers:
       - name: load-generator
         image: {{ .Values.jobs.loadGenerator.image }}
+        imagePullPolicy: {{.Values.global.imagePullPolicy}}
         command: ["/app/entrypoint.sh", "python", "/app/run-all.py"]
         env:
         - name: WSK_API_HOST

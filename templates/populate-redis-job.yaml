@@ -21,6 +21,7 @@ spec:
       containers:
       - name: populate-redis
         image: {{ .Values.jobs.populateRedis.image }}
+        imagePullPolicy: {{.Values.global.imagePullPolicy}}
         env:
         - name: REDIS_HOST
           value: {{ .Values.global.redis.host }}
