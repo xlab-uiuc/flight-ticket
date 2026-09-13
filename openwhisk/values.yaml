@@ -1,0 +1,44 @@
+# SREGym's OpenWhisk profile uses the same Linux images on AMD64 and ARM64.
+# The runtime catalog covers the platform's Node.js/Python system actions and
+# FlightTicket's custom Python image; unrelated language runtimes are not enabled.
+whisk:
+  runtimes: sregym-runtimes.json
+  ingress:
+    type: NodePort
+    apiHostName: localhost
+    apiHostPort: 31001
+    useInternally: false
+  limits:
+    actionsInvokesPerminute: 1000
+    actionsInvokesConcurrent: 1000
+affinity:
+  enabled: false
+toleration:
+  enabled: false
+nginx:
+  httpsNodePort: 31001
+controller:
+  imageName: ghcr.io/sregym/openwhisk
+  imageTag: 20260913-controller@sha256:5e0192aa01f0f1dd01aeec01a4ca94880060afd5a1507b8bc5420e8af6fdce36
+invoker:
+  imageName: ghcr.io/sregym/openwhisk
+  imageTag: 20260913-invoker@sha256:458fe8a374cbfc31fe6375a6888e23834589422ef4af672d1979ae4d26bf55fc
+  options: -Dwhisk.kubernetes.user-pod-node-affinity.enabled=false
+  containerFactory:
+    impl: kubernetes
+utility:
+  imageName: ghcr.io/sregym/openwhisk
+  imageTag: 20260913-utility@sha256:26279c46d843b2772542267b022cb4f265c48b18f259ef9a9d0b8bd2fcdb6fe4
+zookeeper:
+  imageName: ghcr.io/sregym/openwhisk
+  imageTag: 20260913-zookeeper@sha256:8e8731e619215175125a220faacaa056a7303337aa846243a33a3eec4d8eb04a
+apigw:
+  imageName: ghcr.io/sregym/openwhisk
+  imageTag: 20260913-apigateway@sha256:f267e09cafc271ac389333b1e18d8ab139eb17632b33713ae570e7e3151329f8
+providers:
+  alarm:
+    imageName: ghcr.io/sregym/openwhisk
+    imageTag: 20260913-alarmprovider@sha256:6800bfe0da58434d300db7b5cb4eec9052e607eeae114961c79db5d4558d1c5e
+  kafka:
+    imageName: ghcr.io/sregym/openwhisk
+    imageTag: 20260913-kafkaprovider@sha256:ca817c3d7f91c3326c407d18443752293b9c50e6fb3e49f8f8145575e5191981

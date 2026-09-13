@@ -25,22 +25,21 @@ kubectl patch storageclass openebs-hostpath -p '{"metadata": {"annotations":{"st
 
 Install and initialize helm for deploying openwhisk, follow the [Helm tutorial](https://helm.sh/docs/intro/install/)
 
-Install and Deploy OpenWhisk, grab the cluster's internal IP to add to the openwhisk deploy `mycluster.yaml` config file.
-```
-git clone https://github.com/apache/openwhisk-deploy-kube.git
-cd openwhisk-deploy-kube
+From this directory, install the pinned OpenWhisk chart with the same multiarch
+images on Linux AMD64 and ARM64 (including Apple Silicon KIND clusters):
+
+```sh
+bash setup_openwhisk.sh --set whisk.ingress.apiHostName=<reachable-cluster-host>
 ```
 
-Get the hostname using `hostname -I` or `minikube ip` if using minikube. Then, edit `deploy/kind/mycluster.yaml` so that `apiHostName` is the proper IP.
-
-run `deploy_wsk.sh` in flight-ticket to allow more than 60 function invocations per minute:
-```
-./deploy_wsk.sh
-```
-Now we are ready to deploy OpenWhisk, `cd` back into `openwhisk-deploy-kube` and run the following:
-```
-helm install owdev ./helm/openwhisk -n openwhisk --create-namespace -f ./deploy/kind/mycluster.yaml
-```
+The script uses `openwhisk/values.yaml` and `openwhisk/runtimes.json`. The runtime
+catalog enables Node.js 14 and Python 3.7 for OpenWhisk's system actions, plus
+FlightTicket's custom Python runtime. The invocation limits are already configured;
+there is no need to edit an upstream checkout. The three optional Swift demo
+actions are omitted; the remaining system packages and event providers are kept.
+Additional arguments are passed to Helm. For a cluster without a default storage
+class, select an existing class with `--set k8s.persistence.hasDefaultStorageClass=false
+--set k8s.persistence.explicitStorageClass=standard`.
 
 Watch OpenWhisk deployment, wait for **owdev-install-packages** to be **Completed** meaning OW was deployed successfully.
 ```
@@ -48,7 +47,7 @@ kubectl get pods -n openwhisk --watch
 ```
 
 ### Deploying flight-ticket
-Update `values.yaml` so that the apiHost matches `hostname -I` and the value in `mycluster.yaml`.
+Update `values.yaml` so that the apiHost matches the OpenWhisk endpoint selected above.
 
 Now, all that's left is to helm install flight-ticket!
 ```

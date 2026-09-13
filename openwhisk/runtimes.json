@@ -1,0 +1,27 @@
+{
+  "runtimes": {
+    "nodejs": [{
+      "kind": "nodejs:14",
+      "default": true,
+      "deprecated": false,
+      "image": {"registry": "ghcr.io", "prefix": "sregym", "name": "openwhisk", "tag": "20260913-nodejs14@sha256:1637290226dd351bff9323dabe39d18e40550033905686791d42b61eefaa4f90"},
+      "attached": {"attachmentName": "codefile", "attachmentType": "text/plain"},
+      "stemCells": [{"initialCount": 2, "memory": "256 MB", "reactive": {
+        "minCount": 1, "maxCount": 4, "ttl": "2 minutes", "threshold": 1, "increment": 1
+      }}]
+    }],
+    "python": [{
+      "kind": "python:3",
+      "default": true,
+      "deprecated": false,
+      "image": {"registry": "ghcr.io", "prefix": "sregym", "name": "openwhisk", "tag": "20260913-python37@sha256:1c4dc4cfa8552adad92ede3a779bff2b237b2400ec790862b27c902b5affc583"},
+      "attached": {"attachmentName": "codefile", "attachmentType": "text/plain"}
+    }]
+  },
+  "blackboxes": [{
+    "registry": "ghcr.io",
+    "prefix": "sregym",
+    "name": "flight-ticket-python-runtime",
+    "tag": "20260911-multiarch@sha256:263cf7a52da1b0a9c8e45825b2574f578c811e791f234499af839a588d255f8a"
+  }]
+}
