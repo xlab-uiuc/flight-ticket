@@ -1,0 +1,20 @@
+diff --git a/helm/openwhisk/configMapFiles/installPackages/myTask.sh b/helm/openwhisk/configMapFiles/installPackages/myTask.sh
+--- a/helm/openwhisk/configMapFiles/installPackages/myTask.sh
++++ b/helm/openwhisk/configMapFiles/installPackages/myTask.sh
+@@ -81,3 +81,16 @@
+ pushd openwhisk-catalog/packages
++    # SREGym enables Node.js and Python, not the optional Swift demo runtime.
++    # Keep all system packages and their supported actions; only these three
++    # Swift examples in the pinned 1.0.0 catalog require the disabled runtime.
++    python - <<'PY'
++import yaml
++path = 'samples/manifest.yaml'
++with open(path) as source:
++    manifest = yaml.safe_load(source)
++for name in ('cat', 'head', 'invoke'):
++    del manifest['project']['packages']['samples']['actions'][name]
++with open(path, 'w') as target:
++    yaml.safe_dump(manifest, target)
++PY
+     ./installCatalogUsingWskdeploy.sh $WHISK_AUTH $WHISK_API_HOST_URL /usr/local/bin/wsk || exit 1
+ popd
