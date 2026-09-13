@@ -12,8 +12,10 @@ git -C "$chart_dir" init --quiet
 git -C "$chart_dir" remote add origin https://github.com/apache/openwhisk-deploy-kube.git
 git -C "$chart_dir" fetch --quiet --depth=1 origin "$chart_revision"
 git -C "$chart_dir" checkout --quiet --detach FETCH_HEAD
-git -C "$chart_dir" apply "$script_dir/openwhisk/catalog.patch"
+git -C "$chart_dir" apply "$script_dir/openwhisk/chart.patch"
 cp "$script_dir/openwhisk/runtimes.json" "$chart_dir/helm/openwhisk/sregym-runtimes.json"
+# System event feeds use CouchDB; FlightTicket actions use Redis.
+cp "$script_dir/openwhisk/action-data-policy.yaml" "$chart_dir/helm/openwhisk/templates/sregym-action-data-policy.yaml"
 
 helm upgrade --install owdev "$chart_dir/helm/openwhisk" \
     --namespace openwhisk --create-namespace \
