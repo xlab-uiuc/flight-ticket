@@ -1,0 +1,22 @@
+{{- range $service, $port := dict "couchdb" 5984 "redis" 6379 }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ $.Release.Name }}-{{ $service }}-actions
+spec:
+  podSelector:
+    matchLabels:
+      name: {{ $.Release.Name }}-{{ $service }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              release: {{ $.Release.Name }}
+              user-action-pod: "true"
+      ports:
+        - protocol: TCP
+          port: {{ $port }}
+{{- end }}

@@ -1,0 +1,34 @@
+diff --git a/helm/openwhisk/configMapFiles/installPackages/myTask.sh b/helm/openwhisk/configMapFiles/installPackages/myTask.sh
+--- a/helm/openwhisk/configMapFiles/installPackages/myTask.sh
++++ b/helm/openwhisk/configMapFiles/installPackages/myTask.sh
+@@ -81,3 +81,16 @@
+ pushd openwhisk-catalog/packages
++    # SREGym enables Node.js and Python, not the optional Swift demo runtime.
++    # Keep all system packages and their supported actions; only these three
++    # Swift examples in the pinned 1.0.0 catalog require the disabled runtime.
++    python - <<'PY'
++import yaml
++path = 'samples/manifest.yaml'
++with open(path) as source:
++    manifest = yaml.safe_load(source)
++for name in ('cat', 'head', 'invoke'):
++    del manifest['project']['packages']['samples']['actions'][name]
++with open(path, 'w') as target:
++    yaml.safe_dump(manifest, target)
++PY
+     ./installCatalogUsingWskdeploy.sh $WHISK_AUTH $WHISK_API_HOST_URL /usr/local/bin/wsk || exit 1
+ popd
+diff --git a/helm/openwhisk/templates/ow-whisk-cm.yaml b/helm/openwhisk/templates/ow-whisk-cm.yaml
+--- a/helm/openwhisk/templates/ow-whisk-cm.yaml
++++ b/helm/openwhisk/templates/ow-whisk-cm.yaml
+@@ -41,6 +41,6 @@
+-  whisk_internal_api_host_proto: "http"
+-  whisk_internal_api_host_port: {{ .Values.nginx.httpPort | quote }}
++  whisk_internal_api_host_proto: "https"
++  whisk_internal_api_host_port: {{ .Values.nginx.httpsPort | quote }}
+   whisk_internal_api_host_name: "{{ .Release.Name }}-nginx.{{ .Release.Namespace }}.svc.{{ .Values.k8s.domain }}"
+-  whisk_internal_api_host_nameAndPort: "{{ .Release.Name }}-nginx.{{ .Release.Namespace }}.svc.{{ .Values.k8s.domain }}:{{ .Values.nginx.httpPort }}"
+-  whisk_internal_api_host_url: "http://{{ .Release.Name }}-nginx.{{ .Release.Namespace }}.svc.{{ .Values.k8s.domain }}:{{ .Values.nginx.httpPort }}"
++  whisk_internal_api_host_nameAndPort: "{{ .Release.Name }}-nginx.{{ .Release.Namespace }}.svc.{{ .Values.k8s.domain }}:{{ .Values.nginx.httpsPort }}"
++  whisk_internal_api_host_url: "https://{{ .Release.Name }}-nginx.{{ .Release.Namespace }}.svc.{{ .Values.k8s.domain }}:{{ .Values.nginx.httpsPort }}"
+ {{- end }}

@@ -1,2 +1,2 @@
-redis
+redis==5.2.1
 pandas
