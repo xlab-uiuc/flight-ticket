@@ -11,8 +11,6 @@ spec:
       - name: deploy-actions
         image: {{ .Values.jobs.deployActions.image }}
         imagePullPolicy: {{.Values.global.imagePullPolicy}}
-        securityContext:
-          privileged: true
         env:
         - name: WSK_API_HOST
           value: {{ .Values.global.openwhisk.apiHost }}
@@ -24,17 +22,9 @@ spec:
           value: "{{ .Values.global.redis.port }}"
         - name: REDIS_DB
           value: "{{ .Values.global.redis.db }}"
-        volumeMounts:
-        - name: docker-sock
-          mountPath: /var/run/docker.sock
         command: ["/bin/bash", "-c"]
         args:
         - |
-          wsk property set --apihost "$WSK_API_HOST" --auth "$WSK_AUTH_KEY" && \
           /app/deploy_ow_actions.sh
-      volumes:
-      - name: docker-sock
-        hostPath:
-          path: /var/run/docker.sock
       restartPolicy: Never
   backoffLimit: 4

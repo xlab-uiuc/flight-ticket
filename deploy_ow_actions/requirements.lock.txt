@@ -1,0 +1,9 @@
+# Redis and its transitive dependencies for the Python 3.6 action runtime.
+# Keep the runtime's built-in requests package unchanged.
+async-timeout==4.0.2
+importlib-metadata==4.8.3
+packaging==21.3
+pyparsing==3.1.4
+redis==4.3.6
+typing-extensions==4.1.1
+zipp==3.6.0
